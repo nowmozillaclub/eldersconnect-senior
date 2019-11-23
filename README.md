@@ -9,7 +9,7 @@
 
 EldersConnect is a smartphone app for iOS and Android to connect Senior Citizens to their Senior Caretakers in order to keep track of medicines, health, etc.
 
-This is the Senior Citizen's app repository. It is developed by members of N.O.W. Mozilla Club at NMIMS.
+This is the Senior Citizen's app repository. It is developed by members of ACM and N.O.W. Mozilla Club at NMIMS MPSTME.
 
 ## Building
 
@@ -30,12 +30,7 @@ Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for more details on how 
 
 ## Credits
 
-This project is primarily developed by a bunch of engineering students at NMIMS's MPSTME:
-
--   [Urmil Shroff](https://github.com/urmilshroff)
--   [Varun Khatri](https://github.com/NecronizerFTW)
-
-Take a look at the entire list of [contributors](https://github.com/nowmozillaclub/eldersconnect-senior/graphs/contributors) to see who all have helped with the project via pull requests.
+This project is primarily developed by a bunch of engineering students at NMIMS MPSTME. Take a look at the entire list of [contributors](https://github.com/nowmozillaclub/eldersconnect-senior/graphs/contributors) to see who all have helped with the project via pull requests.
 
 ## License
 
