@@ -5,7 +5,17 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('You have logged in successfully'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('You have logged in successfully'),
+            FlatButton(
+              onPressed: () {},
+              child: Text('Log out'),
+            )
+          ],
+        ),
       ),
     );
   }
