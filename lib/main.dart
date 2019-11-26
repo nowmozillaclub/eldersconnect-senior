@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ec_senior/pages/authentication/register.dart';
 
 void main() => runApp(MyApp());
 
@@ -6,11 +7,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'EldersConnect Senior',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: Register(),
     );
   }
 }
