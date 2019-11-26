@@ -12,7 +12,9 @@ class Register extends StatelessWidget {
       body: Center(
         child: FlatButton(
           onPressed: () async {
+            // Signing in using Google.
             FirebaseUser _firebaseUser = await _authService.signInWithGoogle();
+            // Checking if login details are fetched.
             if(_firebaseUser != null) {
               print(_firebaseUser.email);
             } else {

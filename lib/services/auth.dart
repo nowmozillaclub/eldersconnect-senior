@@ -32,7 +32,21 @@ class AuthService {
       // Return the corresponding Firebase user.
       return firebaseUser;
     } catch(error) {
+      // Catch and print error.
       print(error.toString());
+      return null;
+    }
+  }
+
+  // Method for signing out users.
+  Future<void> signOut() async {
+    // Handling Exceptions if any.
+    try {
+      // Signing off the user.
+      return await _firebaseAuth.signOut();
+    } catch (error) {
+      // Catch and print error.
+      print(error);
       return null;
     }
   }

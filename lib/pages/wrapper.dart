@@ -9,6 +9,7 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     // Feeding off from AuthStream declared global.
     final _firebaseUser = Provider.of<FirebaseUser>(context);
+    // Based on user login status, rendering pages conditionally.
     return _firebaseUser == null ? Register() : Home();
   }
 }
