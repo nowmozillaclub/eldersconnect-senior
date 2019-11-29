@@ -27,3 +27,12 @@ flutter_icons:
 
 flutter:
   uses-material-design: true
+
+  assets:
+     - assets/credits/
+     - assets/flare/
+
+  fonts:
+    - family: LexendDeca
+      fonts:
+        - asset: assets/fonts/LexendDeca/LexendDeca-Regular.ttf

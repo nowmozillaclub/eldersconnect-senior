@@ -1,3 +1,4 @@
+import 'package:ec_senior/pages/login_page.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -11,24 +12,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: MyColors.primary,
         accentColor: MyColors.accent,
+        fontFamily: 'LexendDeca',
       ),
-      home: MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('EldersConnect Senior'),
-      ),
+      home: MyLoginPage(),
     );
   }
 }
