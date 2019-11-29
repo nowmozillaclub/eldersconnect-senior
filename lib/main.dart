@@ -11,15 +11,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider.value(
-      value: AuthService().firebaseUser,
-      child: MaterialApp(
-      title: 'EldersConnect Senior',
-      theme: ThemeData(
-        primaryColor: MyColors.primary,
-        accentColor: MyColors.accent,
-        fontFamily: 'LexendDeca',
-      ),
-      home: Wrapper(),
-    );
+        value: AuthService().firebaseUser,
+        child: MaterialApp(
+          title: 'EldersConnect Senior',
+          theme: ThemeData(
+            primaryColor: MyColors.primary,
+            accentColor: MyColors.accent,
+            fontFamily: 'LexendDeca',
+          ),
+          home: Wrapper(),
+        ));
   }
 }
