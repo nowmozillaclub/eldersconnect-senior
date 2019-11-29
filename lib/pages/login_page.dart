@@ -28,7 +28,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                   ),
                 ),
                 Text(
-                  'EldersConnect Junior',
+                  'EldersConnect Senior',
                   style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.w500,

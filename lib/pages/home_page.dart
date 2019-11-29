@@ -20,9 +20,9 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text('EldersConnect Junior'),
+                Text('EldersConnect Senior'),
 //                Text(widget.user.displayName),
-                Text('EldersConnect Junior'),
+                Text('EldersConnect Senior'),
               ],
             ),
           ],
