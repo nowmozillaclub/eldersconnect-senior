@@ -1,3 +1,4 @@
+import 'package:ec_senior/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -8,7 +9,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'EldersConnect Senior',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: MyColors.primary,
+        accentColor: MyColors.accent,
       ),
       home: MyHomePage(),
     );
