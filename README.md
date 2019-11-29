@@ -1,6 +1,6 @@
-<!-- <p align="center"><img height="100" width="100" src="./branding/icon.png" alt="EldersConnect"/></p> -->
+<p align="center"><img height="120" width="120" src="./branding/icon.png" alt="EldersConnect"/></p>
 
-# The EldersConnect Senior app for iOS and Android
+# EldersConnect Senior
 
 [![Stars](https://img.shields.io/github/stars/nowmozillaclub/eldersconnect-senior.svg)](https://github.com/nowmozillaclub/eldersconnect-senior/stargazers)
 [![Forks](https://img.shields.io/github/forks/nowmozillaclub/eldersconnect-senior.svg)](https://github.com/nowmozillaclub/eldersconnect-senior/network/members)
