@@ -20,6 +20,25 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.4
+
+flutter_icons:
+  android: 'launcher_icon'
+  image_path_android: 'assets/icon/icon-legacy.png'
+  adaptive_icon_foreground: 'assets/icon/icon-adaptive.png'
+  adaptive_icon_background: '#673ab7'
+
+  ios: true
+  image_path_ios: 'assets/icon/icon-ios.png'
 
 flutter:
   uses-material-design: true
+
+  assets:
+     - assets/credits/
+     - assets/flare/
+
+  fonts:
+    - family: LexendDeca
+      fonts:
+        - asset: assets/fonts/LexendDeca/LexendDeca-Regular.ttf

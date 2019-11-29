@@ -1,4 +1,6 @@
 import 'package:ec_senior/pages/wrapper.dart';
+import 'package:ec_senior/pages/login_page.dart';
+import 'package:ec_senior/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ec_senior/services/auth.dart';
@@ -11,13 +13,13 @@ class MyApp extends StatelessWidget {
     return StreamProvider.value(
       value: AuthService().firebaseUser,
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'EldersConnect Senior',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: Wrapper(),
+      title: 'EldersConnect Senior',
+      theme: ThemeData(
+        primaryColor: MyColors.primary,
+        accentColor: MyColors.accent,
+        fontFamily: 'LexendDeca',
       ),
+      home: Wrapper(),
     );
   }
 }
