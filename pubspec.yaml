@@ -38,6 +38,7 @@ flutter:
   assets:
      - assets/credits/
      - assets/flare/
+     - assets/icon/
 
   fonts:
     - family: LexendDeca

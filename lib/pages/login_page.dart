@@ -1,14 +1,11 @@
 import 'package:ec_senior/services/auth_service.dart';
+import 'package:ec_senior/utils/text_styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
-class MyLoginPage extends StatefulWidget {
-  @override
-  _MyLoginPageState createState() => _MyLoginPageState();
-}
-
-class _MyLoginPageState extends State<MyLoginPage> {
+// ignore: must_be_immutable
+class MyLoginPage extends StatelessWidget {
   AuthService _authService = AuthService();
   @override
   Widget build(BuildContext context) {
@@ -24,23 +21,19 @@ class _MyLoginPageState extends State<MyLoginPage> {
               children: <Widget>[
                 Text(
                   'Welcome to',
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: MyTextStyles.subtitle,
                 ),
                 Text(
                   'EldersConnect Senior',
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: MyTextStyles.title,
                 ),
                 SizedBox(
                   height: 30.0,
                 ),
-                FlutterLogo(
-                  size: 125.0,
+                Container(
+                  height: 125.0,
+                  width: 125.0,
+                  child: Image.asset('assets/icon/icon-legacy.png'),
                 ),
                 SizedBox(
                   height: 30.0,

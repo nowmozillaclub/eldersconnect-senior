@@ -1,83 +1,20 @@
 import 'package:ec_senior/utils/colors.dart';
 import 'package:flutter/material.dart';
 
-class TitleStyles {
-  static const white = TextStyle(
+class MyTextStyles {
+  static const title = TextStyle(
+    fontSize: 22.0,
+    fontWeight: FontWeight.w500,
+    color: MyColors.black,
+  );
+  static const subtitle = TextStyle(
     fontSize: 20.0,
-    color: MyColors.white,
-  );
-  static const black = TextStyle(
-    fontSize: 20.0,
+    fontWeight: FontWeight.w500,
     color: MyColors.black,
   );
-  static const primary = TextStyle(
-    fontSize: 20.0,
-    color: MyColors.primary,
-  );
-}
-
-class SubTitleStyles {
-  static const white = TextStyle(
-    fontSize: 18.0,
-    fontWeight: FontWeight.w700,
-    color: MyColors.white,
-  );
-  static const black = TextStyle(
-    fontSize: 18.0,
-    fontWeight: FontWeight.w700,
+  static const body = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.w400,
     color: MyColors.black,
-  );
-  static const primary = TextStyle(
-    fontSize: 18.0,
-    fontWeight: FontWeight.w700,
-    color: MyColors.primary,
-  );
-}
-
-class BodyStyles {
-  static const white = TextStyle(
-    fontSize: 16.0,
-    color: MyColors.white,
-  );
-  static const black = TextStyle(
-    fontSize: 16.0,
-    color: MyColors.black,
-  );
-  static const primary = TextStyle(
-    fontSize: 16.0,
-    color: MyColors.primary,
-  );
-}
-
-class BodyStylesItalic {
-  static const white = TextStyle(
-    fontSize: 16.0,
-    color: MyColors.white,
-    fontStyle: FontStyle.italic,
-  );
-  static const black = TextStyle(
-    fontSize: 16.0,
-    color: MyColors.black,
-    fontStyle: FontStyle.italic,
-  );
-  static const primary = TextStyle(
-    fontSize: 16.0,
-    color: MyColors.primary,
-    fontStyle: FontStyle.italic,
-  );
-}
-
-class LabelStyles {
-  static const white = TextStyle(
-    fontSize: 14.0,
-    color: MyColors.white,
-  );
-  static const black = TextStyle(
-    fontSize: 14.0,
-    color: MyColors.black,
-  );
-  static const primary = TextStyle(
-    fontSize: 14.0,
-    color: MyColors.primary,
   );
 }
