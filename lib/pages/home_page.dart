@@ -14,7 +14,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    final User user = json.decode(widget.prefs.getString('user'));
+    final User user =
+        User.fromJson(json.decode(widget.prefs.getString('user')));
     // gets logged in user
 
     return Scaffold(
