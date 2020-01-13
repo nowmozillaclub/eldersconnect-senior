@@ -12,15 +12,11 @@ void showEmergencyPopup(BuildContext context) {
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Text(
             'Emergency',
-            style: isThemeCurrentlyDark(context)
-                ? TitleStyles.white
-                : TitleStyles.black,
+            style: MyTextStyles.title,
           ),
           content: Text(
             'You can call an Emergency contact',
-            style: isThemeCurrentlyDark(context)
-                ? BodyStyles.white
-                : BodyStyles.black,
+            style: MyTextStyles.body,
           ),
           actions: <Widget>[
             FlatButton(

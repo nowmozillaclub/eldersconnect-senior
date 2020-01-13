@@ -11,14 +11,11 @@ void showAlert(BuildContext context) {
           borderRadius: BorderRadius.all(Radius.circular(10.0))),
       title: Text(
         'Alert',
-        style: isThemeCurrentlyDark(context)
-            ? TitleStyles.white
-            : TitleStyles.black,
+        style: MyTextStyles.title,
       ),
       content: Text(
         'This is an alert',
-        style:
-            isThemeCurrentlyDark(context) ? BodyStyles.white : BodyStyles.black,
+        style: MyTextStyles.body,
       ),
       actions: <Widget>[
         RaisedButton(

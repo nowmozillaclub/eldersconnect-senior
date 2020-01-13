@@ -46,9 +46,7 @@ class _MyCreditsPageState extends State<MyCreditsPage> {
                   ),
                   Text(
                     'Credits',
-                    style: isThemeCurrentlyDark(context)
-                        ? TitleStyles.white
-                        : TitleStyles.black,
+                    style: MyTextStyles.title,
                   ),
                 ],
               ),
@@ -82,18 +80,14 @@ class _MyCreditsPageState extends State<MyCreditsPage> {
                           children: <Widget>[
                             Text(
                               'Urmil Shroff',
-                              style: isThemeCurrentlyDark(context)
-                                  ? TitleStyles.white
-                                  : TitleStyles.black,
+                              style: MyTextStyles.title,
                             ),
                             SizedBox(
                               height: 5.0,
                             ),
                             Text(
                               'I like developing apps.',
-                              style: isThemeCurrentlyDark(context)
-                                  ? BodyStylesItalic.white
-                                  : BodyStylesItalic.black,
+                              style: MyTextStyles.subtitle,
                             ),
                           ],
                         ),
@@ -111,9 +105,7 @@ class _MyCreditsPageState extends State<MyCreditsPage> {
                           'Built using Flutter 📲'
                           '\nCompletely free & Open Source'
                           '\nMade with ❤️ in Mumbai, India',
-                          style: isThemeCurrentlyDark(context)
-                              ? BodyStyles.white
-                              : BodyStyles.black,
+                          style: MyTextStyles.body,
                           textAlign: TextAlign.center,
                         ),
                         Row(
