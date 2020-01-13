@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:ec_senior/models/user.dart';
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
+import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class MyLoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: MyColors.white,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,10 +41,13 @@ class MyLoginPage extends StatelessWidget {
                 SizedBox(
                   height: 30.0,
                 ),
-                Container(
-                  height: 125.0,
-                  width: 125.0,
-                  child: Image.asset('assets/icon/icon-legacy.png'),
+                Hero(
+                  tag: 'icon',
+                  child: Container(
+                    height: 125.0,
+                    width: 125.0,
+                    child: Image.asset('assets/icon/icon-legacy.png'),
+                  ),
                 ),
                 SizedBox(
                   height: 30.0,
