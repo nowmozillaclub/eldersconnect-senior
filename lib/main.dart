@@ -1,6 +1,6 @@
-import 'package:ec_senior/utils/wrapper.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/colors.dart';
+import 'package:ec_senior/utils/first_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
           accentColor: MyColors.accent,
           fontFamily: 'LexendDeca',
         ),
-        home: Wrapper(),
+        home: FirstPage(),
       ),
     );
   }

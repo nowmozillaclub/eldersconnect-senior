@@ -1,5 +1,9 @@
-import 'package:ec_senior/utils/ui_helpers.dart';
+import 'package:ec_senior/pages/home_page.dart';
+import 'package:ec_senior/pages/login_page.dart';
+import 'package:ec_senior/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 class FirstPage extends StatefulWidget {
   @override
@@ -8,30 +12,32 @@ class FirstPage extends StatefulWidget {
 
 class _FirstPageState extends State<FirstPage> {
   void firstPageChecker() async {
-//    SharedPreferences prefs = await SharedPreferences.getInstance();
-//    bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
-//    String uuid = prefs.getString('uuid') ?? Uuid().v4();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+    String uuid = prefs.getString('uuid') ?? Uuid().v4();
     // generates random uuid as string
 
-//    if (isFirstLaunch) {
-//      Navigator.pushAndRemoveUntil(
-//          context,
-//          MaterialPageRoute(
-//              builder: (context) => MyOnboardingPage(
+    if (isFirstLaunch) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyLoginPage(
+                    helper: prefs,
+                    flag: isFirstLaunch,
+                    identity: uuid,
+                  )),
+          (Route<dynamic> route) => false);
+      // very first launch since install
+    } else {
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyHomePage(
 //                    helper: prefs,
-//                    flag: isFirstLaunch,
 //                    identity: uuid,
-//                  )),
-//          (Route<dynamic> route) => false);
-//      // very first launch since install
-//    } else {
-//      Navigator.pushAndRemoveUntil(
-//          context,
-//          MaterialPageRoute(
-//              builder: (context) =>
-//                  MyMapViewPage(helper: prefs, identity: uuid)),
-//          (Route<dynamic> route) => false);
-//    }
+                  )),
+          (Route<dynamic> route) => false);
+    }
   }
 
   @override
@@ -42,7 +48,7 @@ class _FirstPageState extends State<FirstPage> {
 
   Widget build(BuildContext context) {
     return Container(
-      color: invertInvertColorsStrong(context), // blank screen
+      color: MyColors.white, // blank screen
     );
   }
 }
