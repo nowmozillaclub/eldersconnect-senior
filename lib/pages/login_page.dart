@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:ec_senior/models/user.dart';
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/text_styles.dart';
@@ -5,19 +8,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 // ignore: must_be_immutable
 class MyLoginPage extends StatelessWidget {
   AuthService _authService = AuthService();
-  final SharedPreferences helper;
-  final bool flag;
-  final String identity;
-  MyLoginPage(
-      {Key key,
-      @required this.helper,
-      @required this.flag,
-      @required this.identity})
-      : super(key: key);
+  final SharedPreferences prefs;
+  MyLoginPage({Key key, @required this.prefs}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,15 +51,26 @@ class MyLoginPage extends StatelessWidget {
                   onPressed: () async {
                     FirebaseUser _firebaseUser =
                         await _authService.signInWithGoogle();
+
+                    final String uuid = Uuid().v4();
+                    final String name = _firebaseUser.displayName;
+                    final String email = _firebaseUser.email;
+
                     if (_firebaseUser != null) {
-                      print('Login success! ${_firebaseUser.displayName}, '
-                          '${_firebaseUser.email}');
-                      helper.setBool('isFirstLaunch', false);
-                      helper.setString('uuid', identity);
+                      print('Login success! $name, $email');
+
+                      User user = User(
+                        uuid: uuid,
+                        name: name,
+                        email: email,
+                      );
+
+                      prefs.setBool('isFirstLaunch', false);
+                      prefs.setString('user', json.encode(user));
 
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        return MyHomePage();
+                        return MyHomePage(prefs: this.prefs);
                       }));
                     } else {
                       print('Not logged in');

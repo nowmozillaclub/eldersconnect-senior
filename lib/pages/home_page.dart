@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:ec_senior/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
-//  final FirebaseUser user;
-//  MyHomePage(this.user, {Key key}) : super(key: key);
+  final SharedPreferences prefs;
+  MyHomePage({Key key, @required this.prefs}) : super(key: key);
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -10,6 +14,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    final User user = json.decode(widget.prefs.getString('user'));
+    // gets logged in user
+
     return Scaffold(
       body: Center(
         child: Row(
@@ -21,8 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text('EldersConnect Senior'),
-//                Text(widget.user.displayName),
-                Text('EldersConnect Senior'),
+                Text('Welcome, ${user.name}'),
               ],
             ),
           ],
