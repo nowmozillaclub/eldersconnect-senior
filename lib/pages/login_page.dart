@@ -60,6 +60,7 @@ class MyLoginPage extends StatelessWidget {
                     final String uuid = Uuid().v4();
                     final String name = _firebaseUser.displayName;
                     final String email = _firebaseUser.email;
+                    final String photoUrl = _firebaseUser.photoUrl;
 
                     if (_firebaseUser != null) {
                       print('Login success! $name, $email');
@@ -68,6 +69,7 @@ class MyLoginPage extends StatelessWidget {
                         uuid: uuid,
                         name: name,
                         email: email,
+                        photoUrl: photoUrl,
                       );
 
                       prefs.setBool('isFirstLaunch', false);
