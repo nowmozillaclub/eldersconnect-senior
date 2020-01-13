@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ec_senior/models/user.dart';
+import 'package:ec_senior/utils/text_styles.dart';
+import 'package:ec_senior/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,31 +16,118 @@ class MyHomePage extends StatelessWidget {
     // gets logged in user
 
     return Scaffold(
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text('EldersConnect Senior'),
-                Text('Welcome, ${user.name}'),
-                Container(
-                  width: 50.0,
-                  height: 50.0,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(user.photoUrl),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            height: 80.0,
+          ),
+          Text(
+            'EldersConnect Senior',
+            style: MyTextStyles.heading,
+          ),
+          SizedBox(
+            height: 60.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              GestureDetector(
+                child: Card(
+                  semanticContainer: true,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  elevation: 5.0,
+                  child: Container(
+                    height: 140.0,
+                    width: 140.0,
+                    child: Image.asset(
+                      'assets/graphics/heart.jpg',
+                      fit: BoxFit.fill,
                     ),
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
+                onTap: () => doNothing(),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              GestureDetector(
+                child: Card(
+                  semanticContainer: true,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  elevation: 5.0,
+                  child: Container(
+                    height: 140.0,
+                    width: 140.0,
+                    child: Image.asset(
+                      'assets/graphics/man.jpg',
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                onTap: () => doNothing(),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              GestureDetector(
+                child: Card(
+                  semanticContainer: true,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  elevation: 5.0,
+                  child: Container(
+                    height: 140.0,
+                    width: 140.0,
+                    child: Image.asset(
+                      'assets/graphics/alarm.jpg',
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                onTap: () => doNothing(),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              GestureDetector(
+                child: Card(
+                  semanticContainer: true,
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  elevation: 5.0,
+                  child: Container(
+                    height: 140.0,
+                    width: 140.0,
+                    child: Image.asset(
+                      'assets/graphics/moon.jpg',
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                onTap: () => doNothing(),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -41,6 +41,7 @@ flutter:
   assets:
      - assets/credits/
      - assets/flare/
+     - assets/graphics/
      - assets/icon/
 
   fonts:
