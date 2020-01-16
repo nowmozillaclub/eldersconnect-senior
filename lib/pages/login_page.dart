@@ -13,8 +13,9 @@ import 'package:uuid/uuid.dart';
 
 // ignore: must_be_immutable
 class MyLoginPage extends StatelessWidget {
-  AuthService _authService = AuthService();
   final SharedPreferences prefs;
+  AuthService _authService = AuthService();
+
   MyLoginPage({Key key, @required this.prefs}) : super(key: key);
 
   @override

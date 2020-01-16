@@ -8,11 +8,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatelessWidget {
   final SharedPreferences prefs;
+
   MyHomePage({Key key, @required this.prefs}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final User user = User.fromJson(json.decode(prefs.getString('user')));
+    final User _user = User.fromJson(json.decode(prefs.getString('user')));
     // gets logged in user
 
     return Scaffold(
@@ -26,6 +27,13 @@ class MyHomePage extends StatelessWidget {
           Text(
             'EldersConnect Senior',
             style: MyTextStyles.heading,
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          Text(
+            'Connected to: ${_user.connectedToName}',
+            style: MyTextStyles.body,
           ),
           SizedBox(
             height: 60.0,
