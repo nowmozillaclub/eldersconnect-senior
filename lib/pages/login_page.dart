@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:ec_senior/models/user.dart';
-import 'package:ec_senior/pages/home_page.dart';
+import 'package:ec_senior/pages/qr_link_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
@@ -80,7 +80,7 @@ class MyLoginPage extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  MyHomePage(prefs: this.prefs)),
+                                  MyQRLinkPage(prefs: this.prefs)),
                           (Route<dynamic> route) => false);
                     } else {
                       print('Not logged in');
