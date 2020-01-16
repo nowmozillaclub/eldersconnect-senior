@@ -43,10 +43,10 @@ class MyHomePage extends StatelessWidget {
                   ),
                   elevation: 5.0,
                   child: Container(
-                    height: 140.0,
-                    width: 140.0,
+                    height: 150.0,
+                    width: 150.0,
                     child: Image.asset(
-                      'assets/graphics/heart.jpg',
+                      'assets/graphics/heart.png',
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -65,10 +65,10 @@ class MyHomePage extends StatelessWidget {
                   ),
                   elevation: 5.0,
                   child: Container(
-                    height: 140.0,
-                    width: 140.0,
+                    height: 150.0,
+                    width: 150.0,
                     child: Image.asset(
-                      'assets/graphics/man.jpg',
+                      'assets/graphics/man.png',
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -93,10 +93,10 @@ class MyHomePage extends StatelessWidget {
                   ),
                   elevation: 5.0,
                   child: Container(
-                    height: 140.0,
-                    width: 140.0,
+                    height: 150.0,
+                    width: 150.0,
                     child: Image.asset(
-                      'assets/graphics/alarm.jpg',
+                      'assets/graphics/moon.png',
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -115,10 +115,10 @@ class MyHomePage extends StatelessWidget {
                   ),
                   elevation: 5.0,
                   child: Container(
-                    height: 140.0,
-                    width: 140.0,
+                    height: 150.0,
+                    width: 150.0,
                     child: Image.asset(
-                      'assets/graphics/moon.jpg',
+                      'assets/graphics/emergency.png',
                       fit: BoxFit.fill,
                     ),
                   ),
