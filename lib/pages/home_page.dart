@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ec_senior/models/user.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:ec_senior/utils/ui_helpers.dart';
@@ -22,21 +23,37 @@ class MyHomePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           SizedBox(
-            height: 80.0,
+            height: 70.0,
+          ),
+          Hero(
+            tag: 'icon',
+            child: Container(
+              width: 50.0,
+              height: 50.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: CachedNetworkImageProvider(_user.photoUrl),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
           ),
           Text(
             'EldersConnect Senior',
             style: MyTextStyles.heading,
           ),
           SizedBox(
-            height: 20.0,
+            height: 10.0,
           ),
           Text(
             'Connected to: ${_user.connectedToName}',
             style: MyTextStyles.body,
           ),
           SizedBox(
-            height: 60.0,
+            height: 50.0,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
