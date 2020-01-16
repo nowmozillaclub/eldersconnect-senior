@@ -76,10 +76,12 @@ class MyLoginPage extends StatelessWidget {
                       prefs.setBool('isFirstLaunch', false);
                       prefs.setString('user', json.encode(user));
 
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return MyHomePage(prefs: this.prefs);
-                      }));
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  MyHomePage(prefs: this.prefs)),
+                          (Route<dynamic> route) => false);
                     } else {
                       print('Not logged in');
                     }
