@@ -6,6 +6,9 @@ import 'package:ec_senior/utils/text_styles.dart';
 import 'package:ec_senior/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intent/intent.dart' as android_intent;
+import 'package:intent/action.dart' as android_action;
+import 'package:permission_handler/permission_handler.dart';
 
 class MyHomePage extends StatelessWidget {
   final SharedPreferences prefs;
@@ -148,7 +151,15 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                onTap: () => doNothing(),
+                onTap: () async {
+                  final PermissionHandler _permissionHandler = PermissionHandler();
+                  var result = await _permissionHandler.requestPermissions([PermissionGroup.phone]);
+                  if(result[PermissionGroup.phone]== PermissionStatus.granted){
+                  android_intent.Intent()
+                    ..setAction(android_action.Action.ACTION_CALL)
+                    ..setData(Uri(scheme: "tel", path: "9687723927"))
+                    ..startActivity().catchError((e) => print(e));}
+                },
               ),
             ],
           ),
