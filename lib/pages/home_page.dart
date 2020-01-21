@@ -152,14 +152,8 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
                 onTap: () async {
-                  final PermissionHandler _permissionHandler = PermissionHandler();
-                  var result = await _permissionHandler.requestPermissions([PermissionGroup.phone]);
-                  if(result[PermissionGroup.phone]== PermissionStatus.granted){
-                  android_intent.Intent()
-                    ..setAction(android_action.Action.ACTION_CALL)
-                    ..setData(Uri(scheme: "tel", path: "9687723927"))
-                    ..startActivity().catchError((e) => print(e));}
-                },
+                 requestPermission();
+                }
               ),
             ],
           ),
@@ -167,4 +161,16 @@ class MyHomePage extends StatelessWidget {
       ),
     );
   }
-}
+
+  Future requestPermission() async {
+   var result= await PermissionHandler().requestPermissions([PermissionGroup.phone]);
+   if (result[PermissionGroup.contacts] == PermissionStatus.granted)
+   {
+     android_intent.Intent()
+       ..setAction(android_action.Action.ACTION_CALL)
+       ..setData(Uri(scheme: "tel", path: "9687723927"))
+       ..startActivity().catchError((e) => print(e));
+   }
+      }
+  }
+
