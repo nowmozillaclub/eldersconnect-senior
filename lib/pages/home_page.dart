@@ -6,6 +6,11 @@ import 'package:ec_senior/utils/text_styles.dart';
 import 'package:ec_senior/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:call_number/call_number.dart';
+import 'package:flutter_sms/flutter_sms.dart';
+import 'dart:async';
+import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 
 class MyHomePage extends StatelessWidget {
   final SharedPreferences prefs;
@@ -148,7 +153,10 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                onTap: () => doNothing(),
+                onTap: () {
+                  //sendSms();
+                  _initCall() ;
+                },
               ),
             ],
           ),
@@ -156,4 +164,31 @@ class MyHomePage extends StatelessWidget {
       ),
     );
   }
+
+  _initCall() async {
+      String phone = '9545196901';
+      await new CallNumber().callNumber('+91' + phone);
+  }
+
+//  _sendSms() async
+//  {
+//    String message = "This is an sample SOS message";
+//    List<String> recipents = ["9545196901"];
+//    String _result = await FlutterSms
+//        .sendSMS(message: message, recipients: recipents)
+//        .catchError((onError) {
+//      print(onError);
+//    });
+//    print(_result);
+//  }
+//  static const platform = const MethodChannel('sendSms');
+// Future <Null> sendSms()async {
+//    print("SendSMS");
+//    try {
+//      final String result = await platform.invokeMethod('send',<String,dynamic>{"phone":"+919545196901","msg":"This is an sample SOS message"});
+//      print(result);
+//    } on PlatformException catch (e) {
+//      print(e.toString());
+//    }
+//  }
 }
