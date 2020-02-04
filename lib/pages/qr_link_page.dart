@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MyQRLinkPage extends StatelessWidget {
   final SharedPreferences prefs;
+  final globalKey = GlobalKey<ScaffoldState>();
 
   MyQRLinkPage({Key key, @required this.prefs}) : super(key: key);
 
@@ -32,6 +33,7 @@ class MyQRLinkPage extends StatelessWidget {
     }
 
     return Scaffold(
+      key: globalKey,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,6 +49,12 @@ class MyQRLinkPage extends StatelessWidget {
             'Please scan the QR code from EC Junior',
             style: MyTextStyles.body,
           ),
+          RaisedButton(
+            onPressed: () {
+              final snackBar = SnackBar(content: Text('Logged in !!'));
+              globalKey.currentState.showSnackBar(snackBar);
+            },
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
