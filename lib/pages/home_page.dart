@@ -154,8 +154,8 @@ class MyHomePage extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  //sendSms();
-                  _initCall() ;
+                  sendSms();
+                  _initCall();
                 },
               ),
             ],
@@ -166,29 +166,18 @@ class MyHomePage extends StatelessWidget {
   }
 
   _initCall() async {
-      String phone = '9545196901';
-      await new CallNumber().callNumber('+91' + phone);
+    String phone = '9545196901';
+    await new CallNumber().callNumber('+91' + phone);
   }
 
-//  _sendSms() async
-//  {
-//    String message = "This is an sample SOS message";
-//    List<String> recipents = ["9545196901"];
-//    String _result = await FlutterSms
-//        .sendSMS(message: message, recipients: recipents)
-//        .catchError((onError) {
-//      print(onError);
-//    });
-//    print(_result);
-//  }
-//  static const platform = const MethodChannel('sendSms');
-// Future <Null> sendSms()async {
-//    print("SendSMS");
-//    try {
-//      final String result = await platform.invokeMethod('send',<String,dynamic>{"phone":"+919545196901","msg":"This is an sample SOS message"});
-//      print(result);
-//    } on PlatformException catch (e) {
-//      print(e.toString());
-//    }
-//  }
+  sendSms() async {
+    String message = "This is a SOS message";
+    List<String> recipents = ["9545196901"];
+    String _result =
+        await FlutterSms.sendSMS(message: message, recipients: recipents)
+            .catchError((onError) {
+      print(onError);
+    });
+    print(_result);
+  }
 }
