@@ -20,8 +20,8 @@ dependencies:
   qr_flutter: ^3.2.0
   shared_preferences: ^0.5.6
   uuid: ^2.0.4
-  intent:
-  permission_handler:
+  call_number: ^0.0.1
+  flutter_sms: ^1.1.0
 
 dev_dependencies:
   flutter_test:
