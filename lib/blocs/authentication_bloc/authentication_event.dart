@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 class AuthenticationEvent extends Equatable {
 
@@ -8,6 +10,12 @@ class AuthenticationEvent extends Equatable {
 
 class AppStarted extends AuthenticationEvent {}
 
-class LoggedIn extends AuthenticationEvent {}
+class LoggedIn extends AuthenticationEvent {
+  final FirebaseUser firebaseUser;
+
+  LoggedIn({ @required this.firebaseUser });
+
+  FirebaseUser get user => firebaseUser;
+}
 
 class LoggedOut extends AuthenticationEvent {}
