@@ -1,7 +1,11 @@
+import 'package:ec_senior/blocs/authentication_bloc/authentication_bloc.dart';
+import 'package:ec_senior/blocs/login_bloc/bloc.dart';
+import 'package:ec_senior/blocs/repositories/user_repository.dart';
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/pages/login_page.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FirstPage extends StatefulWidget {
@@ -19,7 +23,13 @@ class _FirstPageState extends State<FirstPage> {
       if (isFirstLaunch) {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => MyLoginPage(prefs: prefs)),
+            MaterialPageRoute(
+                builder: (context) => BlocProvider(
+                    create: (context) => LoginBloc(
+                        authenticationBloc:
+                            BlocProvider.of<AuthenticationBloc>(context),
+                        userRepository: UserRepository()),
+                    child: MyLoginPage(prefs: prefs))),
             (Route<dynamic> route) => false);
         // very first launch since install
       } else {
