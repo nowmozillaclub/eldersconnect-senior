@@ -1,4 +1,4 @@
-import 'package:ec_senior/blocs/authentication_bloc/bloc.dart';
+import 'package:ec_senior/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:ec_senior/blocs/login_bloc/bloc.dart';
 import 'package:ec_senior/blocs/repositories/user_repository.dart';
 import 'package:ec_senior/pages/home_page.dart';

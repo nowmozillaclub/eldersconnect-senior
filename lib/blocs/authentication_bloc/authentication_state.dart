@@ -9,8 +9,6 @@ abstract class AuthenticationState extends Equatable {
 
 class Uninitialized extends AuthenticationState {}
 
-class FirstLaunch extends AuthenticationState {}
-
 class Authenticated extends AuthenticationState {
   final String _displayName;
 
