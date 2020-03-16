@@ -24,7 +24,7 @@ class MyQRLinkPage extends StatelessWidget {
           builder: (context) {
             return Center(
               child: QrImage(
-                data: _user.uuid,
+                data: _user.uid,
                 version: QrVersions.auto,
                 size: 250.0,
               ),

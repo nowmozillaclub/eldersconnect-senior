@@ -1,16 +1,13 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:call_number/call_number.dart';
 import 'package:ec_senior/models/user.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:ec_senior/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:call_number/call_number.dart';
-import 'package:flutter_sms/flutter_sms.dart';
-import 'dart:async';
 import 'package:flutter/widgets.dart';
-import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatelessWidget {
   final SharedPreferences prefs;
@@ -173,11 +170,11 @@ class MyHomePage extends StatelessWidget {
   sendSms() async {
     String message = "This is a SOS message";
     List<String> recipents = ["9545196901"];
-    String _result =
-        await FlutterSms.sendSMS(message: message, recipients: recipents)
-            .catchError((onError) {
-      print(onError);
-    });
-    print(_result);
+//    String _result =
+//        await FlutterSms.sendSMS(message: message, recipients: recipents)
+//            .catchError((onError) {
+//      print(onError);
+//    });
+//    print(_result);
   }
 }

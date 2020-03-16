@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:ec_senior/models/user.dart';
-import 'package:ec_senior/pages/qr_link_page.dart';
+import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 
 // ignore: must_be_immutable
 class MyLoginPage extends StatelessWidget {
@@ -20,7 +19,9 @@ class MyLoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         color: MyColors.white,
         child: Row(
@@ -58,32 +59,37 @@ class MyLoginPage extends StatelessWidget {
                     FirebaseUser _firebaseUser =
                         await _authService.signInWithGoogle();
 
-                    final String uuid = Uuid().v4();
-                    final String name = _firebaseUser.displayName;
-                    final String email = _firebaseUser.email;
-                    final String photoUrl = _firebaseUser.photoUrl;
+                    final String _uid = _firebaseUser.uid;
+                    final String _name = _firebaseUser.displayName;
+                    final String _email = _firebaseUser.email;
+                    final String _photoUrl = _firebaseUser.photoUrl;
 
                     if (_firebaseUser != null) {
-                      print('Login success! $name, $email');
+                      print('Login success! $_name, $_email, $_uid');
 
-                      User user = User(
-                        uuid: uuid,
-                        name: name,
-                        email: email,
-                        photoUrl: photoUrl,
+                      User _user = User(
+                        uid: _uid,
+                        name: _name,
+                        email: _email,
+                        photoUrl: _photoUrl,
                       );
 
                       prefs.setBool('isFirstLaunch', false);
-                      prefs.setString('user', json.encode(user));
+                      prefs.setString('user', json.encode(_user));
 
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  MyQRLinkPage(prefs: this.prefs)),
+                                  MyHomePage(prefs: this.prefs)),
                           (Route<dynamic> route) => false);
                     } else {
-                      print('Not logged in');
+                      print('Error logging in');
+                      _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text('Error logging in'),
+                        ),
+                      );
                     }
                   },
                 ),
