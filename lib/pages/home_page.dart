@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:call_number/call_number.dart';
 import 'package:ec_senior/models/user.dart';
 import 'package:ec_senior/models/user_repository.dart';
 import 'package:ec_senior/utils/colors.dart';
@@ -152,8 +151,7 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    sendSms();
-                    _initCall();
+                    _contactJunior(_user.phone);
                   },
                 ),
               ],
@@ -164,19 +162,8 @@ class MyHomePage extends StatelessWidget {
     );
   }
 
-  _initCall() async {
-    String phone = '9545196901';
-    await new CallNumber().callNumber('+91' + phone);
-  }
-
-  sendSms() async {
-    String message = "This is a SOS message";
-    List<String> recipents = ["9545196901"];
-//    String _result =
-//        await FlutterSms.sendSMS(message: message, recipients: recipents)
-//            .catchError((onError) {
-//      print(onError);
-//    });
-//    print(_result);
+  void _contactJunior(String number) async {
+    launchUrl('tel:$number');
+//    launchUrl('sms:$number');
   }
 }

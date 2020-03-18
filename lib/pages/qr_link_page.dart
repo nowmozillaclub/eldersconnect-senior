@@ -60,7 +60,8 @@ class MyQRLinkPage extends StatelessWidget {
         child: StreamBuilder<QuerySnapshot>(
           stream: _instance.collection('juniors').snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return CircularProgressIndicator();
+            if (!snapshot.hasData)
+              return Center(child: CircularProgressIndicator());
             List<DocumentSnapshot> _docs = snapshot.data.documents;
 
             for (int i = 0; i < _docs.length; i++) {
