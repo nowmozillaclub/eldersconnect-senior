@@ -20,7 +20,7 @@ class User {
         'name': name,
         'email': email,
         'photoUrl': photoUrl,
-        'connectedTouid': connectedToUid,
+        'connectedToUid': connectedToUid,
         'connectedToName': connectedToName,
       };
 
