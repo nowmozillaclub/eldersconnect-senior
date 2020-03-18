@@ -17,9 +17,7 @@ class MyLoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-      key: _scaffoldKey,
       body: Container(
         color: MyColors.white,
         child: Row(
@@ -70,11 +68,6 @@ class MyLoginPage extends StatelessWidget {
                           (Route<dynamic> route) => false);
                     } else {
                       print('Error logging in');
-                      _scaffoldKey.currentState.showSnackBar(
-                        SnackBar(
-                          content: Text('Error logging in'),
-                        ),
-                      );
                     }
                   },
                 ),

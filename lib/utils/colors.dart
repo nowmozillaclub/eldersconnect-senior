@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 class MyColors {
   static const primary = Color(0xffffc107);
   static const accent = Color(0xff673ab7);
-  static const translucent = Color(0x60212121);
-  static const light = Color(0xffeceff1);
-  static const dark = Color(0xff37474f);
   static const white = Color(0xfffafafa);
   static const black = Color(0xff212121);
 } //main app colors
@@ -20,8 +17,3 @@ class MaterialColors {
   static const pink = Color(0xffc51162);
   static const orange = Color(0xffff6d00);
 } //material design colors
-
-class ShadowColors {
-  static const light = Color(0x80718792);
-  static const dark = Color(0x801c313a);
-} //shadow colors for raised elements

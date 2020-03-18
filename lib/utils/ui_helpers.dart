@@ -46,22 +46,6 @@ Color invertInvertColorsTheme(BuildContext context) {
   }
 } //keeps the same colors lol
 
-Color invertColorsMild(BuildContext context) {
-  if (isThemeCurrentlyDark(context)) {
-    return MyColors.light;
-  } else {
-    return MyColors.dark;
-  }
-} //returns appropriate mild colors for text visibility
-
-Color invertInvertColorsMild(BuildContext context) {
-  if (isThemeCurrentlyDark(context)) {
-    return MyColors.dark;
-  } else {
-    return MyColors.light;
-  }
-} //keeps the same colors lol
-
 Color invertColorsStrong(BuildContext context) {
   if (isThemeCurrentlyDark(context)) {
     return MyColors.white;
@@ -77,11 +61,3 @@ Color invertInvertColorsStrong(BuildContext context) {
     return MyColors.white;
   }
 } //keeps the same colors lol
-
-Color shadowColor(BuildContext context) {
-  if (isThemeCurrentlyDark(context)) {
-    return ShadowColors.dark;
-  } else {
-    return ShadowColors.light;
-  }
-} //returns appropriate colors for raised element shadows

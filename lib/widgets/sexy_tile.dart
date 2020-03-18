@@ -21,7 +21,6 @@ class SexyTile extends StatelessWidget {
         color: color,
         elevation: 10.0,
         borderRadius: BorderRadius.circular(15.0),
-        shadowColor: shadowColor(context),
         child: InkWell(
           child: child,
           splashColor: splashColor,
