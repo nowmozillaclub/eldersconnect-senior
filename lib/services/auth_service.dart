@@ -33,6 +33,7 @@ class AuthService {
       return firebaseUser;
     } catch (error) {
       print('Error: $error');
+      return null;
     }
   }
 
@@ -42,6 +43,16 @@ class AuthService {
       return await _firebaseAuth.signOut();
     } catch (error) {
       print('Error: $error');
+    }
+  }
+
+  // returns the currently signed in user
+  Future<FirebaseUser> getUser() async {
+    try {
+      return await _firebaseAuth.currentUser();
+    } catch (error) {
+      print('Error: $error');
+      return null;
     }
   }
 }
