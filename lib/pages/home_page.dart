@@ -1,18 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ec_senior/models/user.dart';
-import 'package:ec_senior/models/user_repository.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
-import 'package:ec_senior/utils/ui_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatelessWidget {
   final SharedPreferences prefs;
-
-  MyHomePage({Key key, @required this.prefs}) : super(key: key);
-
+  final User user;
+  MyHomePage({Key key, @required this.prefs, @required this.user})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,20 +31,20 @@ class MyHomePage extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: CachedNetworkImageProvider(_user.photoUrl),
+                    image: CachedNetworkImageProvider(user.photoUrl),
                   ),
                 ),
               ),
             ),
             SizedBox(
-              height: 10.0,
+              height: 20.0,
             ),
             Text(
               'EldersConnect Senior',
               style: MyTextStyles.heading,
             ),
             SizedBox(
-              height: 60.0,
+              height: 40.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +67,7 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onTap: () => doNothing(),
+                  onTap: () => print('Card tapped'),
                 ),
                 SizedBox(
                   width: 10.0,
@@ -91,7 +89,7 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onTap: () => doNothing(),
+                  onTap: () => print('Card tapped'),
                 ),
               ],
             ),
@@ -119,7 +117,7 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onTap: () => doNothing(),
+                  onTap: () => print('Card tapped'),
                 ),
                 SizedBox(
                   width: 10.0,
@@ -141,9 +139,7 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  onTap: () {
-//                    _contactJunior(_user.phone);
-                  },
+                  onTap: () => print('Card tapped'),
                 ),
               ],
             ),
@@ -151,10 +147,5 @@ class MyHomePage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _contactJunior(String number) async {
-    launchUrl('tel:$number');
-//    launchUrl('sms:$number');
   }
 }

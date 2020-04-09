@@ -5,7 +5,6 @@ import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
@@ -45,23 +44,25 @@ class MyLoginPage extends StatelessWidget {
                 ),
                 GoogleSignInButton(
                   onPressed: () async {
-                    final _prefs = await SharedPreferences.getInstance();
-                    final _userRepo =
-                        Provider.of<UserRepository>(context, listen: false);
-                    final _authService =
-                        Provider.of<AuthService>(context, listen: false);
-                    final _firebaseUser = await _authService.signInWithGoogle();
+                    final prefs = await SharedPreferences.getInstance();
+                    final _userRepo = UserRepository();
+                    final _firebaseUser =
+                        await AuthService().signInWithGoogle();
 
                     if (_firebaseUser != null) {
                       print('Login success! ${_firebaseUser.displayName}');
-                      _prefs.setBool('isFirstLaunch', false);
+                      prefs.setBool('isFirstLaunch', false);
 
                       await _userRepo.updateUser(null, null);
+                      final user = await _userRepo.getUser();
 
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MyQRLinkPage()),
+                              builder: (context) => MyQRLinkPage(
+                                    prefs: prefs,
+                                    user: user,
+                                  )),
                           (Route<dynamic> route) => false);
                     } else {
                       print('Error logging in');

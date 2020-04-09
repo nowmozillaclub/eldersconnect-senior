@@ -5,14 +5,17 @@ import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyQRLinkPage extends StatelessWidget {
+  final SharedPreferences prefs;
+  final User user;
+  MyQRLinkPage({Key key, @required this.prefs, @required this.user})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
-
+    UserRepository _userRepo = UserRepository();
     Widget _showQrCode() {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -21,7 +24,7 @@ class MyQRLinkPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Welcome!',
+                'Welcome, ${user.name}!',
                 style: MyTextStyles.title,
               ),
               SizedBox(
@@ -37,7 +40,7 @@ class MyQRLinkPage extends StatelessWidget {
               Hero(
                 tag: 'icon',
                 child: QrImage(
-                  data: _user.uid,
+                  data: user.uid,
                   version: QrVersions.auto,
                   size: 250.0,
                 ),
@@ -61,14 +64,17 @@ class MyQRLinkPage extends StatelessWidget {
             for (int i = 0; i < _docs.length; i++) {
               String juniorConnectedTo = _docs[i].data['connectedToUid'];
 
-              if (juniorConnectedTo == _user.uid) {
+              if (juniorConnectedTo == user.uid) {
                 String juniorUid = _docs[i].data['uid'];
                 String juniorName = _docs[i].data['name'];
 
                 _userRepo.updateUser(juniorUid, juniorName);
-                _prefs.setBool('isConnected', true);
+                prefs.setBool('isConnected', true);
 
-                return MyHomePage();
+                return MyHomePage(
+                  prefs: prefs,
+                  user: user,
+                );
               }
             }
             return _showQrCode();
