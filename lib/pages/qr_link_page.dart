@@ -5,19 +5,13 @@ import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MyQRLinkPage extends StatelessWidget {
-  final SharedPreferences prefs;
-
-  MyQRLinkPage({Key key, @required this.prefs}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    final UserRepository _userRepository = UserRepository(prefs);
-    final User _user = _userRepository.getUser();
-    final Firestore _instance = Firestore.instance;
 
     Widget _showQrCode() {
       return Row(
@@ -27,7 +21,7 @@ class MyQRLinkPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Welcome, ${_user.name}',
+                'Welcome!',
                 style: MyTextStyles.title,
               ),
               SizedBox(
@@ -58,7 +52,7 @@ class MyQRLinkPage extends StatelessWidget {
       body: Container(
         color: MyColors.white,
         child: StreamBuilder<QuerySnapshot>(
-          stream: _instance.collection('juniors').snapshots(),
+          stream: Firestore.instance.collection('juniors').snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData)
               return Center(child: CircularProgressIndicator());
@@ -71,10 +65,10 @@ class MyQRLinkPage extends StatelessWidget {
                 String juniorUid = _docs[i].data['uid'];
                 String juniorName = _docs[i].data['name'];
 
-                _userRepository.updateUser(juniorUid, juniorName);
-                prefs.setBool('isConnected', true);
+                _userRepo.updateUser(juniorUid, juniorName);
+                _prefs.setBool('isConnected', true);
 
-                return MyHomePage(prefs: this.prefs);
+                return MyHomePage();
               }
             }
             return _showQrCode();

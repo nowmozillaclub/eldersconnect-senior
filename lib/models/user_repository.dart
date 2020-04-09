@@ -7,8 +7,21 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
-  final SharedPreferences prefs;
-  UserRepository(this.prefs);
+  Future<void> saveUser(User user) async {
+    final _prefs = await SharedPreferences.getInstance();
+    _prefs.setString('user', json.encode(user));
+    print('${user.name} saved');
+  }
+
+  Future<User> getUser() async {
+    final _prefs = await SharedPreferences.getInstance();
+    try {
+      return User.fromJson(json.decode(_prefs.getString('user')));
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
 
   Future<User> updateUser(
     String _connectedToUid,
@@ -26,7 +39,7 @@ class UserRepository {
       connectedToName: _connectedToName,
     );
 
-    saveUser(user);
+    await saveUser(user);
 
     await Firestore.instance
         .collection('seniors')
@@ -42,19 +55,5 @@ class UserRepository {
     });
 
     return user;
-  }
-
-  void saveUser(User user) {
-    prefs.setString('user', json.encode(user));
-    print('${user.name} saved');
-  }
-
-  User getUser() {
-    try {
-      return User.fromJson(json.decode(prefs.getString('user')));
-    } catch (error) {
-      print(error);
-      return null;
-    }
   }
 }

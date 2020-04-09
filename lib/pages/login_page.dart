@@ -3,18 +3,13 @@ import 'package:ec_senior/pages/qr_link_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class MyLoginPage extends StatelessWidget {
-  final SharedPreferences prefs;
-  AuthService _authService = AuthService();
-
-  MyLoginPage({Key key, @required this.prefs}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,21 +45,23 @@ class MyLoginPage extends StatelessWidget {
                 ),
                 GoogleSignInButton(
                   onPressed: () async {
-                    final _userRepository = UserRepository(prefs);
-                    FirebaseUser firebaseUser =
-                        await _authService.signInWithGoogle();
+                    final _prefs = await SharedPreferences.getInstance();
+                    final _userRepo =
+                        Provider.of<UserRepository>(context, listen: false);
+                    final _authService =
+                        Provider.of<AuthService>(context, listen: false);
+                    final _firebaseUser = await _authService.signInWithGoogle();
 
-                    if (firebaseUser != null) {
-                      print('Login success! ${firebaseUser.displayName}');
-                      prefs.setBool('isFirstLaunch', false);
+                    if (_firebaseUser != null) {
+                      print('Login success! ${_firebaseUser.displayName}');
+                      _prefs.setBool('isFirstLaunch', false);
 
-                      await _userRepository.updateUser(null, null);
+                      await _userRepo.updateUser(null, null);
 
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  MyQRLinkPage(prefs: this.prefs)),
+                              builder: (context) => MyQRLinkPage()),
                           (Route<dynamic> route) => false);
                     } else {
                       print('Error logging in');

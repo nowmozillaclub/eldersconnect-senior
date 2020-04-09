@@ -15,8 +15,6 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User _user = UserRepository(prefs).getUser();
-
     return Scaffold(
       body: Container(
         color: MyColors.white,
@@ -48,14 +46,7 @@ class MyHomePage extends StatelessWidget {
               style: MyTextStyles.heading,
             ),
             SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              'Connected to ${_user.connectedToName}',
-              style: MyTextStyles.body,
-            ),
-            SizedBox(
-              height: 50.0,
+              height: 60.0,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -151,7 +142,7 @@ class MyHomePage extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    _contactJunior(_user.phone);
+//                    _contactJunior(_user.phone);
                   },
                 ),
               ],
