@@ -18,10 +18,12 @@ Replace the encrypted `AndroidManifest.xml` with the following contents:
 ```
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="club.nowmozilla.ec_senior">
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="EldersConnect Senior"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
