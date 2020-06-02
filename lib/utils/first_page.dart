@@ -1,8 +1,8 @@
-import 'package:ec_senior/models/user_repository.dart';
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/pages/login_page.dart';
 import 'package:ec_senior/pages/qr_link_page.dart';
 import 'package:ec_senior/utils/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,37 +14,31 @@ class FirstPage extends StatefulWidget {
 class _FirstPageState extends State<FirstPage> {
   void firstPageChecker() async {
     final prefs = await SharedPreferences.getInstance();
-    final _userRepo = UserRepository();
-    final user = await _userRepo.getUser();
-
-    bool _isConnected = prefs.getBool('isConnected' ?? false);
-
+    bool _isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+    bool _isConnected = prefs.getBool('isConnected') ?? false;
+    print('$_isFirstLaunch, $_isConnected');
     Future.delayed(Duration(seconds: 1, milliseconds: 500), () {
       // splash screen kinda thing
-      if (user == null) {
+      if (_isFirstLaunch == true) {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => MyLoginPage()),
             (Route<dynamic> route) => false);
         // user hasn't signed in yet
-      } else if (_isConnected == false) {
+      }
+      else if (_isConnected == false) {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) => MyQRLinkPage(
-                      prefs: prefs,
-                      user: user,
-                    )),
+                builder: (context) => MyQRLinkPage()),
             (Route<dynamic> route) => false);
         // user hasn't scanned the QR yet
-      } else {
+      }
+      else {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (context) => MyHomePage(
-                      prefs: prefs,
-                      user: user,
-                    )),
+                builder: (context) => MyHomePage()),
             (Route<dynamic> route) => false);
       } // when setup is complete
     });

@@ -5,11 +5,6 @@ class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // Setting up Auth Stream to watch for changes
-  Stream<FirebaseUser> get firebaseUser {
-    return _firebaseAuth.onAuthStateChanged;
-  }
-
   // Method for signing in users via Google
   Future<FirebaseUser> signInWithGoogle() async {
     // Handling Exceptions if any.
@@ -40,7 +35,7 @@ class AuthService {
   // Method for signing out users
   Future<void> signOut() async {
     try {
-      return await _firebaseAuth.signOut();
+      await _firebaseAuth.signOut();
     } catch (error) {
       print('Error: $error');
     }
@@ -54,5 +49,5 @@ class AuthService {
       print('Error: $error');
       return null;
     }
-  }
+  }//TODO: Remove
 }

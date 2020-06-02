@@ -4,19 +4,19 @@ import 'package:ec_senior/models/user_repository.dart';
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class MyQRLinkPage extends StatelessWidget {
-  final SharedPreferences prefs;
-  final User user;
-  MyQRLinkPage({Key key, @required this.prefs, @required this.user})
-      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    UserRepository _userRepo = UserRepository();
-    Widget _showQrCode() {
+
+//    final userRepo = Provider.of<UserRepository>(context, listen: false);//Error
+
+    Widget _showQrCode(User user) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -52,35 +52,38 @@ class MyQRLinkPage extends StatelessWidget {
     }
 
     return Scaffold(
-      body: Container(
-        color: MyColors.white,
-        child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('juniors').snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData)
-              return Center(child: CircularProgressIndicator());
-            List<DocumentSnapshot> _docs = snapshot.data.documents;
+        body: Container(
+          color: MyColors.white,
+          child: FutureBuilder(
+                future: UserRepository().user,
+                builder: (context, user) {
+                  if(user.connectionState == ConnectionState.waiting)
+                    return Center(child: CircularProgressIndicator());
+                  else
+                    return StreamBuilder<QuerySnapshot>(
+                    stream: Firestore.instance.collection('juniors').snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData)
+                        return Center(child: CircularProgressIndicator());
+                      List<DocumentSnapshot> _docs = snapshot.data.documents;
 
-            for (int i = 0; i < _docs.length; i++) {
-              String juniorConnectedTo = _docs[i].data['connectedToUid'];
+                      for (int i = 0; i < _docs.length; i++) {
+                        String juniorConnectedTo = _docs[i].data['connectedToUid'];
+                        if (juniorConnectedTo == user.data.uid) {
+                          String juniorUid = _docs[i].data['uid'];
+                          String juniorName = _docs[i].data['name'];
 
-              if (juniorConnectedTo == user.uid) {
-                String juniorUid = _docs[i].data['uid'];
-                String juniorName = _docs[i].data['name'];
+                          UserRepository().updateUser(juniorUid, juniorName);
 
-                _userRepo.updateUser(juniorUid, juniorName);
-                prefs.setBool('isConnected', true);
-
-                return MyHomePage(
-                  prefs: prefs,
-                  user: user,
-                );
-              }
-            }
-            return _showQrCode();
-          },
-        ),
-      ),
+                          return MyHomePage();
+                        }
+                      }
+                      return _showQrCode(user.data);
+                    },
+                  );
+                }
+              ),
+          ),
     );
   }
 }
