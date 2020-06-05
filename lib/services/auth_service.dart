@@ -1,17 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ec_senior/models/user.dart';
+import 'package:ec_senior/models/user_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthService {
+class AuthService extends ChangeNotifier{
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final Firestore _firestore = Firestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  // Setting up Auth Stream to watch for changes
-  Stream<FirebaseUser> get firebaseUser {
-    return _firebaseAuth.onAuthStateChanged;
-  }
+  Future<User> get user => getUser();
 
   // Method for signing in users via Google
-  Future<FirebaseUser> signInWithGoogle() async {
+  Future<User> signInWithGoogle() async {
     // Handling Exceptions if any.
     try {
       // Sign in with Google with Authentication.
@@ -30,7 +32,30 @@ class AuthService {
           await _firebaseAuth.signInWithCredential(authCredential);
       final FirebaseUser firebaseUser = authResult.user;
 
-      return firebaseUser;
+      await _firestore.collection('seniors').document('${firebaseUser.uid}').setData({
+        'uid': firebaseUser.uid,
+        'name': firebaseUser.displayName,
+        'email': firebaseUser.email,
+        'phone': firebaseUser.phoneNumber,
+        'photoUrl': firebaseUser.photoUrl,
+        'connectedToUid': null,
+        'connectedToName': null,
+      });
+
+      User user = User(
+        uid: firebaseUser.uid,
+        name: firebaseUser.displayName,
+        email: firebaseUser.email,
+        phone: firebaseUser.phoneNumber,
+        photoUrl: firebaseUser.photoUrl,
+        connectedToUid: null,
+        connectedToName: null,
+      );
+
+      UserRepository().saveUser(user);
+
+      return user;
+
     } catch (error) {
       print('Error: $error');
       return null;
@@ -40,16 +65,28 @@ class AuthService {
   // Method for signing out users
   Future<void> signOut() async {
     try {
-      return await _firebaseAuth.signOut();
+      await _firebaseAuth.signOut();
     } catch (error) {
       print('Error: $error');
     }
   }
 
   // returns the currently signed in user
-  Future<FirebaseUser> getUser() async {
+  Future<User> getUser() async {
     try {
-      return await _firebaseAuth.currentUser();
+      final FirebaseUser firebaseUser = await _firebaseAuth.currentUser();
+
+      final DocumentSnapshot userDoc = await _firestore.collection('seniors').document('${firebaseUser.uid}').get();
+      User user = User(
+        uid: userDoc.data['uid'],
+        name: userDoc.data['name'],
+        email: userDoc.data['email'],
+        phone: userDoc.data['phone'],
+        photoUrl: userDoc.data['photoUrl'],
+        connectedToUid: userDoc.data['connectedToUid'],
+        connectedToName: userDoc.data['connectedToName']
+      );
+      return user;
     } catch (error) {
       print('Error: $error');
       return null;

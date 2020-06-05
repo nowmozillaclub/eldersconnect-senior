@@ -1,12 +1,13 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ec_senior/models/user.dart';
 import 'package:ec_senior/services/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
+
+  Future<User> get user => getUser();
+
   Future<void> saveUser(User user) async {
     final _prefs = await SharedPreferences.getInstance();
     _prefs.setString('user', json.encode(user));
@@ -23,18 +24,15 @@ class UserRepository {
     }
   }
 
-  Future<User> updateUser(
-    String _connectedToUid,
-    String _connectedToName,
-  ) async {
-    FirebaseUser _firebaseUser = await AuthService().getUser();
+  Future<void> updateUser(String _connectedToUid, String _connectedToName,) async {
+    User user = await AuthService().getUser();
 
-    User user = User(
-      uid: _firebaseUser.uid,
-      name: _firebaseUser.displayName,
-      email: _firebaseUser.email,
-      phone: _firebaseUser.phoneNumber,
-      photoUrl: _firebaseUser.photoUrl,
+    user = User(
+      uid: user.uid,
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      photoUrl: user.photoUrl,
       connectedToUid: _connectedToUid,
       connectedToName: _connectedToName,
     );
@@ -43,17 +41,27 @@ class UserRepository {
 
     await Firestore.instance
         .collection('seniors')
-        .document('${_firebaseUser.uid}')
+        .document('${user.uid}')
         .setData({
-      'uid': _firebaseUser.uid,
-      'name': _firebaseUser.displayName,
-      'email': _firebaseUser.email,
-      'phone': _firebaseUser.phoneNumber,
-      'photoUrl': _firebaseUser.photoUrl,
-      'connectedToUid': _connectedToUid,
-      'connectedToName': _connectedToName,
+      'uid': user.uid,
+      'name': user.name,
+      'email': user.email,
+      'phone': user.phone,
+      'photoUrl': user.photoUrl,
+      'connectedToUid': user.connectedToUid,
+      'connectedToName': user.connectedToName,
     });
+  }
 
-    return user;
+
+  Future<void> clearUser() async {
+    User user = await getUser();
+    await Firestore.instance.collection('seniors').document('${user.uid}').delete();
+
+    final pref = await SharedPreferences.getInstance();
+    pref.setString('user', null);
+    pref.setBool('isConnected', false);
+    pref.setBool('isFirstLaunch', true);
+
   }
 }
