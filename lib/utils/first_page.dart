@@ -1,10 +1,11 @@
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/pages/login_page.dart';
 import 'package:ec_senior/pages/qr_link_page.dart';
+import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class FirstPage extends StatefulWidget {
   @override
@@ -12,56 +13,37 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  void firstPageChecker() async {
-    final prefs = await SharedPreferences.getInstance();
-    bool _isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
-    bool _isConnected = prefs.getBool('isConnected') ?? false;
-    print('$_isFirstLaunch, $_isConnected');
-    Future.delayed(Duration(seconds: 1, milliseconds: 500), () {
-      // splash screen kinda thing
-      if (_isFirstLaunch == true) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => MyLoginPage()),
-            (Route<dynamic> route) => false);
-        // user hasn't signed in yet
-      }
-      else if (_isConnected == false) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MyQRLinkPage()),
-            (Route<dynamic> route) => false);
-        // user hasn't scanned the QR yet
-      }
-      else {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MyHomePage()),
-            (Route<dynamic> route) => false);
-      } // when setup is complete
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    firstPageChecker();
-  }
 
   Widget build(BuildContext context) {
-    return Container(
-      color: MyColors.white,
-      child: Center(
-        child: Hero(
-          tag: 'icon',
-          child: Container(
-            height: 200.0,
-            width: 200.0,
-            child: Image.asset('assets/icon/icon-legacy.png'),
-          ),
-        ),
+
+    AuthService _auth = Provider.of<AuthService>(context, listen: false);
+
+    return Scaffold(
+      body: FutureBuilder(
+        future: _auth.user,
+        builder: (context, user) {
+          if(user.connectionState == ConnectionState.waiting)
+            return Container(
+              color: MyColors.white,
+              child: Center(
+                child: Hero(
+                  tag: 'icon',
+                  child: Container(
+                    height: 200.0,
+                    width: 200.0,
+                    child: Image.asset('assets/icon/icon-legacy.png'),
+                  ),
+                ),
+              ),
+            );
+          else if(user.data == null)
+            return MyLoginPage();
+          else if(user.data.connectedToUid == null)
+            return MyQRLinkPage();
+          else {
+            return MyHomePage();
+          }
+        },
       ),
     );
   }

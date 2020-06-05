@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ec_senior/models/user.dart';
 import 'package:ec_senior/models/user_repository.dart';
 import 'package:ec_senior/pages/home_page.dart';
+import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,8 +14,6 @@ class MyQRLinkPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-//    final userRepo = Provider.of<UserRepository>(context, listen: false);//Error
 
     Widget _showQrCode(User user) {
       return Row(
@@ -51,11 +50,13 @@ class MyQRLinkPage extends StatelessWidget {
       );
     }
 
+    AuthService _auth = Provider.of<AuthService>(context, listen: true);
+
     return Scaffold(
         body: Container(
           color: MyColors.white,
           child: FutureBuilder(
-                future: UserRepository().user,
+                future: _auth.user,
                 builder: (context, user) {
                   if(user.connectionState == ConnectionState.waiting)
                     return Center(child: CircularProgressIndicator());

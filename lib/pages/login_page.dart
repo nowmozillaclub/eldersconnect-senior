@@ -1,4 +1,3 @@
-import 'package:ec_senior/models/user_repository.dart';
 import 'package:ec_senior/pages/qr_link_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/colors.dart';
@@ -9,11 +8,11 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class MyLoginPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
 
-//    final _userRepo = Provider.of<UserRepository>(context, listen: false);//Error
-//    final _authService = Provider.of<AuthService>(context, listen: false);//Error
+    final AuthService _authServices = Provider.of<AuthService>(context, listen: true);
 
     return Scaffold(
         body: Container(
@@ -48,13 +47,11 @@ class MyLoginPage extends StatelessWidget {
                     ),
                       GoogleSignInButton(
                             onPressed: () async {
-                              final userRepo = UserRepository();
-                              final _authServices = AuthService();
-                              final _firebaseUser = await _authServices.signInWithGoogle();
 
-                              if (_firebaseUser != null) {
-                                print('Login success! ${_firebaseUser.displayName}');
-                                await userRepo.createUser(_firebaseUser);
+                              final _user = await _authServices.signInWithGoogle();
+
+                              if (_user != null) {
+                                print('Login success! ${_user.name}');
 
                               Navigator.pushAndRemoveUntil(
                                   context,

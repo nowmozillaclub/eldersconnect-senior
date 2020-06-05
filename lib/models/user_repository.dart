@@ -1,11 +1,10 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ec_senior/models/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:ec_senior/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class UserRepository extends ChangeNotifier{
+class UserRepository {
 
   Future<User> get user => getUser();
 
@@ -26,8 +25,7 @@ class UserRepository extends ChangeNotifier{
   }
 
   Future<void> updateUser(String _connectedToUid, String _connectedToName,) async {
-    User user = await getUser();
-//    FirebaseUser _firebaseUser = await AuthService().getUser();
+    User user = await AuthService().getUser();
 
     user = User(
       uid: user.uid,
@@ -41,9 +39,6 @@ class UserRepository extends ChangeNotifier{
 
     await saveUser(user);
 
-    final pref = await SharedPreferences.getInstance();
-    pref.setBool('isConnected', true);
-
     await Firestore.instance
         .collection('seniors')
         .document('${user.uid}')
@@ -56,39 +51,8 @@ class UserRepository extends ChangeNotifier{
       'connectedToUid': user.connectedToUid,
       'connectedToName': user.connectedToName,
     });
-
-    notifyListeners();
   }
 
-  Future<void> createUser(FirebaseUser firebaseUser) async {
-
-    await Firestore.instance.collection('seniors').document('${firebaseUser.uid}').setData({
-      'uid': firebaseUser.uid,
-      'name': firebaseUser.displayName,
-      'email': firebaseUser.email,
-      'phone': firebaseUser.phoneNumber,
-      'photoUrl': firebaseUser.photoUrl,
-      'connectedToName': null,
-      'connectedToUid': null,
-    });
-
-    User user = User(
-      uid: firebaseUser.uid,
-      name: firebaseUser.displayName,
-      email: firebaseUser.email,
-      phone: firebaseUser.phoneNumber,
-      photoUrl: firebaseUser.photoUrl,
-      connectedToName: null,
-      connectedToUid: null,
-    );
-
-    saveUser(user);
-
-    final pref = await SharedPreferences.getInstance();
-    pref.setBool('isFirstLaunch', false);
-
-    notifyListeners();
-  }
 
   Future<void> clearUser() async {
     User user = await getUser();
@@ -99,6 +63,5 @@ class UserRepository extends ChangeNotifier{
     pref.setBool('isConnected', false);
     pref.setBool('isFirstLaunch', true);
 
-    notifyListeners();
   }
 }
