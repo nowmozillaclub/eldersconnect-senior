@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         accentColor: MyColors.accent,
         fontFamily: 'LexendDeca',
       ),
-      home: MyCarousel(),
+      home: FirstPage()
     );
   }
 }
