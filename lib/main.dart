@@ -1,3 +1,4 @@
+import 'package:ec_senior/services/questionnaires.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/first_page.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
         accentColor: MyColors.accent,
         fontFamily: 'LexendDeca',
       ),
-      home: FirstPage(),
+      home: MyCarousel(),
     );
   }
 }
