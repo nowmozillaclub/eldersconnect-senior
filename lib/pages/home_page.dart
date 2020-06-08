@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ec_senior/models/user.dart';
 import 'package:ec_senior/utils/colors.dart';
+import 'package:ec_senior/utils/size_config.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -42,6 +43,8 @@ class MyHomePage extends StatelessWidget {
             Text(
               'EldersConnect Senior',
               style: MyTextStyles.heading,
+              
+              
             ),
             SizedBox(
               height: 40.0,
@@ -59,8 +62,8 @@ class MyHomePage extends StatelessWidget {
                     ),
                     elevation: 5.0,
                     child: Container(
-                      height: 150.0,
-                      width: 150.0,
+                      height: 41 * SizeConfig.imageSizeMultiplier,
+                      width: 41 * SizeConfig.imageSizeMultiplier,
                       child: Image.asset(
                         'assets/graphics/heart.png',
                         fit: BoxFit.fill,
@@ -81,8 +84,8 @@ class MyHomePage extends StatelessWidget {
                     ),
                     elevation: 5.0,
                     child: Container(
-                      height: 150.0,
-                      width: 150.0,
+                      height: 41 * SizeConfig.imageSizeMultiplier,
+                      width:41 * SizeConfig.imageSizeMultiplier,
                       child: Image.asset(
                         'assets/graphics/man.png',
                         fit: BoxFit.fill,
@@ -109,8 +112,8 @@ class MyHomePage extends StatelessWidget {
                     ),
                     elevation: 5.0,
                     child: Container(
-                      height: 150.0,
-                      width: 150.0,
+                      height: 41 * SizeConfig.imageSizeMultiplier,
+                      width: 41 * SizeConfig.imageSizeMultiplier,
                       child: Image.asset(
                         'assets/graphics/moon.png',
                         fit: BoxFit.fill,
@@ -131,8 +134,8 @@ class MyHomePage extends StatelessWidget {
                     ),
                     elevation: 5.0,
                     child: Container(
-                      height: 150.0,
-                      width: 150.0,
+                      height: 41 * SizeConfig.imageSizeMultiplier,
+                      width: 41 * SizeConfig.imageSizeMultiplier,
                       child: Image.asset(
                         'assets/graphics/emergency.png',
                         fit: BoxFit.fill,

@@ -1,27 +1,28 @@
 import 'package:ec_senior/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:ec_senior/utils/size_config.dart';
 
 class MyTextStyles {
-  static const heading = TextStyle(
-    fontSize: 24.0,
+  static final heading = TextStyle(
+    fontSize: 3.2 * SizeConfig.textMultiplier,
     fontWeight: FontWeight.w800,
     color: MyColors.black,
   );
 
-  static const title = TextStyle(
-    fontSize: 20.0,
+  static final title = TextStyle(
+    fontSize: 3.2 * SizeConfig.textMultiplier,
     fontWeight: FontWeight.w500,
     color: MyColors.black,
   );
 
-  static const subtitle = TextStyle(
-    fontSize: 18.0,
+  static final subtitle = TextStyle(
+    fontSize: 2.5 * SizeConfig.textMultiplier,
     fontWeight: FontWeight.w500,
     color: MyColors.black,
   );
 
-  static const body = TextStyle(
-    fontSize: 16.0,
+  static final body = TextStyle(
+    fontSize: 2.4 * SizeConfig.textMultiplier,
     fontWeight: FontWeight.w400,
     color: MyColors.black,
   );

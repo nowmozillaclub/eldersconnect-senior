@@ -22,7 +22,7 @@ dependencies:
   carousel_pro: ^0.0.1
   flutter_multi_carousel: ^1.0.0
   carousel_slider: ^1.3.0
-  carousel_widget:
+  carousel_widget: ^0.1.1
 
 dev_dependencies:
   flutter_test:
