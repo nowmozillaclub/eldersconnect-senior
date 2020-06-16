@@ -40,6 +40,7 @@ class AuthService extends ChangeNotifier{
         'photoUrl': firebaseUser.photoUrl,
         'connectedToUid': null,
         'connectedToName': null,
+        'sosStatus': false,
       });
 
       User user = User(
@@ -50,6 +51,7 @@ class AuthService extends ChangeNotifier{
         photoUrl: firebaseUser.photoUrl,
         connectedToUid: null,
         connectedToName: null,
+        sosStatus: false,
       );
 
       UserRepository().saveUser(user);
@@ -84,7 +86,8 @@ class AuthService extends ChangeNotifier{
         phone: userDoc.data['phone'],
         photoUrl: userDoc.data['photoUrl'],
         connectedToUid: userDoc.data['connectedToUid'],
-        connectedToName: userDoc.data['connectedToName']
+        connectedToName: userDoc.data['connectedToName'],
+        sosStatus: userDoc.data['sosStatus']
       );
       return user;
     } catch (error) {

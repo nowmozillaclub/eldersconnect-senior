@@ -6,8 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
 
-  Future<User> get user => getUser();
-
   Future<void> saveUser(User user) async {
     final _prefs = await SharedPreferences.getInstance();
     _prefs.setString('user', json.encode(user));
@@ -24,7 +22,7 @@ class UserRepository {
     }
   }
 
-  Future<void> updateUser(String _connectedToUid, String _connectedToName,) async {
+  Future<void> updateUser(String _connectedToUid, String _connectedToName, bool _sosStatus) async {
     User user = await AuthService().getUser();
 
     user = User(
@@ -35,6 +33,7 @@ class UserRepository {
       photoUrl: user.photoUrl,
       connectedToUid: _connectedToUid,
       connectedToName: _connectedToName,
+      sosStatus: _sosStatus && user.phone.isNotEmpty?true:false,
     );
 
     await saveUser(user);
@@ -50,6 +49,7 @@ class UserRepository {
       'photoUrl': user.photoUrl,
       'connectedToUid': user.connectedToUid,
       'connectedToName': user.connectedToName,
+      'sosStatus': user.sosStatus,
     });
   }
 
@@ -60,8 +60,6 @@ class UserRepository {
 
     final pref = await SharedPreferences.getInstance();
     pref.setString('user', null);
-    pref.setBool('isConnected', false);
-    pref.setBool('isFirstLaunch', true);
-
   }
+
 }
