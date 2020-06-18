@@ -69,12 +69,13 @@ class MyQRLinkPage extends StatelessWidget {
                       List<DocumentSnapshot> _docs = snapshot.data.documents;
 
                       for (int i = 0; i < _docs.length; i++) {
-                        String juniorConnectedTo = _docs[i].data['connectedToUid'];
-                        if (juniorConnectedTo == user.data.uid) {
+                        String seniorConnectedTo = _docs[i].data['connectedToUid'];
+                        if (seniorConnectedTo == user.data.uid) {
                           String juniorUid = _docs[i].data['uid'];
                           String juniorName = _docs[i].data['name'];
+                          String juniorPhone = _docs[i].data['phone'];//TODO: Add with phone Number validation
 
-                          UserRepository().updateUser(juniorUid, juniorName);
+                          UserRepository().updateUser(juniorUid, juniorName, juniorPhone.isNotEmpty);
 
                           return MyHomePage();
                         }

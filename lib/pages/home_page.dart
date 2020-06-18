@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ec_senior/commons/bottom_nav_bar.dart';
 import 'package:ec_senior/commons/custom_tile.dart';
+import 'package:ec_senior/pages/account_detail_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
@@ -29,33 +31,47 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 90.0,
               ),
-              Consumer<AuthService>(
-                builder: (context, auth, child) {
-                  return FutureBuilder(
-                    future: auth.getUser(),
-                    builder: (context, user) {
-                      if(user.connectionState == ConnectionState.waiting)
-                        return Text("Loading...");
-                      else
-                        return Container(
-                          color: MyColors.white,
-                          child: Hero(
-                            tag: 'icon',
-                            child: Container(
-                              width: 50.0,
-                              height: 50.0,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: CachedNetworkImageProvider(user.data.photoUrl)
-                                )
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountPage()));
+                },
+                child: Consumer<AuthService>(
+                  builder: (context, auth, child) {
+                    return Container(
+                            color: MyColors.white,
+                            child: Hero(
+                              tag: 'icon',
+                              child: FutureBuilder(
+                                future: auth.getUser(),
+                                builder: (context, user) {
+                                  if(user.connectionState == ConnectionState.waiting)
+                                    return Container(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                              image: AssetImage('assets/graphics/blank_user.png')
+                                          )
+                                      ),
+                                    );
+                                  else
+                                    return Container(
+                                      width: 50.0,
+                                      height: 50.0,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: DecorationImage(
+                                              image: CachedNetworkImageProvider(user.data.photoUrl)
+                                          )
+                                      ),
+                                    );
+                                },
                               ),
                             ),
-                          ),
-                        );
-                    },
-                  );
-                },
+                          );
+                  },
+                ),
               ),
               SizedBox(
                 height: 20.0,
@@ -108,9 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavBar(currentSelected: currentSelectedNavBar,),
     );
   }
 }
-
-
-

@@ -15,7 +15,7 @@ dependencies:
   firebase_auth: ^0.15.5+3
   firebase_core: ^0.4.4
   flutter_auth_buttons: ^0.8.0
-  google_sign_in: ^4.4.1
+  google_sign_in: ^4.0.0
   qr_flutter: ^3.2.0
   shared_preferences: ^0.5.6+3
   provider: ^4.0.4
