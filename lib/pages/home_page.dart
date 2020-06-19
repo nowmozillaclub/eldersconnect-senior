@@ -41,32 +41,15 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: MyColors.white,
                             child: Hero(
                               tag: 'icon',
-                              child: FutureBuilder(
-                                future: auth.getUser(),
-                                builder: (context, user) {
-                                  if(user.connectionState == ConnectionState.waiting)
-                                    return Container(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                              image: AssetImage('assets/graphics/blank_user.png')
-                                          )
-                                      ),
-                                    );
-                                  else
-                                    return Container(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          image: DecorationImage(
-                                              image: CachedNetworkImageProvider(user.data.photoUrl)
-                                          )
-                                      ),
-                                    );
-                                },
+                              child: Container(
+                                width: 50.0,
+                                height: 50.0,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: CachedNetworkImageProvider(auth.user.photoUrl)
+                                    )
+                                ),
                               ),
                             ),
                           );

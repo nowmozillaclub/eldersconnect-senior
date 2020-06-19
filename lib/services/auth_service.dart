@@ -9,11 +9,45 @@ class AuthService extends ChangeNotifier{
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final Firestore _firestore = Firestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  static User userInfo;
 
-  Future<User> get user => getUser();
+  User get user {
+    return userInfo;
+  }
+
+  set user(User user) {
+    userInfo = user;
+  }
+
+  // initialises user to the currently signed in user
+  Future<User> loadUser() async {
+    try {
+      final FirebaseUser firebaseUser = await _firebaseAuth.currentUser();
+      final DocumentSnapshot userDoc = await _firestore.collection('seniors')
+          .document('${firebaseUser.uid}')
+          .get();
+
+      User user = User(
+          uid: userDoc.data['uid'],
+          name: userDoc.data['name'],
+          email: userDoc.data['email'],
+          phone: userDoc.data['phone'],
+          photoUrl: userDoc.data['photoUrl'],
+          connectedToUid: userDoc.data['connectedToUid'],
+          connectedToName: userDoc.data['connectedToName'],
+          sosStatus: userDoc.data['sosStatus']
+      );
+
+      return user;
+    }
+    catch (error) {
+      print('Error: $error');
+      return null;
+    }
+  }
 
   // Method for signing in users via Google
-  Future<User> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
     // Handling Exceptions if any.
     try {
       // Sign in with Google with Authentication.
@@ -43,7 +77,7 @@ class AuthService extends ChangeNotifier{
         'sosStatus': false,
       });
 
-      User user = User(
+      userInfo = User(
         uid: firebaseUser.uid,
         name: firebaseUser.displayName,
         email: firebaseUser.email,
@@ -54,13 +88,48 @@ class AuthService extends ChangeNotifier{
         sosStatus: false,
       );
 
-      UserRepository().saveUser(user);
-
-      return user;
-
-    } catch (error) {
+      UserRepository().saveUser(userInfo);
+      notifyListeners();
+    }
+    catch (error) {
       print('Error: $error');
       return null;
+    }
+  }
+
+  Future<void> updateUser(String _connectedToUid, String _connectedToName, bool _sosStatus) async {
+    // Handling Exceptions if any.
+    try {
+      userInfo = User(
+        uid: userInfo.uid,
+        name: userInfo.name,
+        email: userInfo.email,
+        phone: userInfo.phone,
+        photoUrl: userInfo.photoUrl,
+        connectedToUid: _connectedToUid,
+        connectedToName: _connectedToName,
+        sosStatus: _sosStatus && userInfo.phone.isNotEmpty?true:false,
+      );
+
+      await UserRepository().saveUser(userInfo);
+
+      await Firestore.instance
+          .collection('seniors')
+          .document('${userInfo.uid}')
+          .setData({
+        'uid': userInfo.uid,
+        'name': userInfo.name,
+        'email': userInfo.email,
+        'phone': userInfo.phone,
+        'photoUrl': userInfo.photoUrl,
+        'connectedToUid': userInfo.connectedToUid,
+        'connectedToName': userInfo.connectedToName,
+        'sosStatus': userInfo.sosStatus,
+      });
+      notifyListeners();
+    }
+    catch(error) {
+      print('Error: $error');
     }
   }
 
@@ -68,31 +137,12 @@ class AuthService extends ChangeNotifier{
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
+      notifyListeners();
     } catch (error) {
       print('Error: $error');
     }
   }
 
-  // returns the currently signed in user
-  Future<User> getUser() async {
-    try {
-      final FirebaseUser firebaseUser = await _firebaseAuth.currentUser();
-
-      final DocumentSnapshot userDoc = await _firestore.collection('seniors').document('${firebaseUser.uid}').get();
-      User user = User(
-        uid: userDoc.data['uid'],
-        name: userDoc.data['name'],
-        email: userDoc.data['email'],
-        phone: userDoc.data['phone'],
-        photoUrl: userDoc.data['photoUrl'],
-        connectedToUid: userDoc.data['connectedToUid'],
-        connectedToName: userDoc.data['connectedToName'],
-        sosStatus: userDoc.data['sosStatus']
-      );
-      return user;
-    } catch (error) {
-      print('Error: $error');
-      return null;
-    }
-  }
 }
+
+//TODO: Hope everything runs

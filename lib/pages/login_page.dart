@@ -12,7 +12,7 @@ class MyLoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final AuthService _authServices = Provider.of<AuthService>(context, listen: true);
+    final AuthService auth = Provider.of<AuthService>(context, listen: true);
 
     return Scaffold(
         body: Container(
@@ -48,10 +48,10 @@ class MyLoginPage extends StatelessWidget {
                       GoogleSignInButton(
                             onPressed: () async {
 
-                              final _user = await _authServices.signInWithGoogle();
+                              await auth.signInWithGoogle();
 
-                              if (_user != null) {
-                                print('Login success! ${_user.name}');
+                              if (auth.user != null) {
+                                print('Login success! ${auth.user.name}');
 
                               Navigator.pushAndRemoveUntil(
                                   context,
