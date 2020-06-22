@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ec_senior/models/user_repository.dart';
 import 'package:ec_senior/pages/qr_link_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
@@ -55,7 +56,7 @@ class MyLoginPage extends StatelessWidget {
 
                       await _userRepo.updateUser(null, null);
                       final user = await _userRepo.getUser();
-
+                      createQuestionnaire();
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -76,4 +77,12 @@ class MyLoginPage extends StatelessWidget {
       ),
     );
   }
+}
+createQuestionnaire(){
+   Future<void> Questions(bool one,bool two,bool three,) async {
+      await Firestore.instance.collection("res").add({
+        'Do you have  fever': false,     
+          'Do you have headAche': false,     
+      });
+      }
 }
