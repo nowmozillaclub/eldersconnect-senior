@@ -1,6 +1,7 @@
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/pages/qr_link_page.dart';
-import 'package:ec_senior/services/questionnaires.dart';
+import 'package:ec_senior/pages/questionnaire.dart';
+
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/first_page.dart';
 import 'package:ec_senior/utils/size_config.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         accentColor: MyColors.accent,
         fontFamily: 'LexendDeca',
       ),
-      home: FirstPage()
+      home: MyHomePage()
     );
         });
       });

@@ -57,3 +57,20 @@ class UserRepository {
     return user;
   }
 }
+class Questinnairedata{
+  final String queuid ;
+  Questinnairedata({this.queuid});
+ 
+  final CollectionReference allQuestionnaire = Firestore.instance.collection('questionnaire');
+  Future updateUserData(String question,String time) async{
+    return await allQuestionnaire.document(queuid).setData({
+      "questions":question,
+      "Time": time,
+    });
+}
+//get the questions from the collections
+
+Stream<QuerySnapshot> get ques{
+  return allQuestionnaire.snapshots();
+}
+}

@@ -56,7 +56,11 @@ class MyLoginPage extends StatelessWidget {
 
                       await _userRepo.updateUser(null, null);
                       final user = await _userRepo.getUser();
+<<<<<<< Updated upstream
                       createQuestionnaire();
+=======
+                        creatingQuesnnaire();
+>>>>>>> Stashed changes
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -78,6 +82,7 @@ class MyLoginPage extends StatelessWidget {
     );
   }
 }
+<<<<<<< Updated upstream
 createQuestionnaire(){
    Future<void> Questions(bool one,bool two,bool three,) async {
       await Firestore.instance.collection("res").add({
@@ -86,3 +91,17 @@ createQuestionnaire(){
       });
       }
 }
+=======
+creatingQuesnnaire(){
+  Future<void> _responses(bool one,bool two,bool three,) async {
+    
+
+
+      await Firestore.instance.collection("res").add({
+        'Do you have fever': true,        
+
+      });
+      }
+}
+// .document("6W10dAKIWpU9UWMSWisVXzhU5Em1").collection("default_ques").document("AAKLqmZ0tWWaXyHabgx0").setData
+>>>>>>> Stashed changes
