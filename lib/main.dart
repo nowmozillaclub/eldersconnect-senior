@@ -1,3 +1,4 @@
+import 'package:ec_senior/pages/firebase.dart';
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/pages/qr_link_page.dart';
 import 'package:ec_senior/pages/questionnaire.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
         accentColor: MyColors.accent,
         fontFamily: 'LexendDeca',
       ),
-      home: MyHomePage()
+      home: MyCarousell()
     );
         });
       });

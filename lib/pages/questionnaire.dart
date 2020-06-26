@@ -1,4 +1,7 @@
-      import 'package:cloud_firestore/cloud_firestore.dart';
+  
+  
+
+import 'package:cloud_firestore/cloud_firestore.dart';
       import 'package:flutter/material.dart';
       import 'package:carousel_widget/carousel_widget.dart';
       import 'package:carousel_slider/carousel_slider.dart';
@@ -113,7 +116,7 @@
         goToUndoneNext() {
          
           left = true;
-          _responses(done,left,emergency);
+          // _responses(done,left,emergency);
           setState(() {
             i=i+1;
           });
@@ -125,7 +128,7 @@
 
       goToDoneNext() {
         done = true;
-       _responses(done,left,emergency);
+      //  _responses(done,left,emergency);
           setState(() {
             i=i+1;
             
@@ -143,7 +146,7 @@
 
       emergencypress() {       
         emergency = true;
-       _responses(done,left,emergency);
+      //  _responses(done,left,emergency);
        setState(() {
             i=i;
           });
@@ -179,48 +182,47 @@
         
       //   ),
          StreamBuilder<QuerySnapshot>(
-                        stream: Firestore.instance
-                            .collection('seniors')
-                         
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData)
-                            return Text( 'Loading messages...');
+      stream: Firestore.instance.collection('seniors').document("6W10dAKIWpU9UWMSWisVXzhU5Em1").collection("default_ques").snapshots(),
 
-                          List<DocumentSnapshot> docs = snapshot.data.documents;
-                        });
-            
-          titles.add('docs[1]');
-          description.add('hello');
-          imagenames.add("assets/graphics/emergency.png");
-            
-
-          titles.add("Question from Urmil");
+      builder: (context,snapshot){
+        if(!snapshot.hasData) return Text(" hi just wait");
+            return 
+            titles.add(snapshot.data.documents[0]['q1']);
+                }     
+                            );                      
+                        
+            titles.add("Hello Jagrit");        
           description.add(
               "How is your leg pain");
           imagenames.add("assets/graphics/man.png");
-
-          titles.add("Hello Jagrit");
+          
+            titles.add("Hello Jagrit");
           description.add(
       "what about HeadAche");
           imagenames.add("assets/graphics/emergency.png");
+        
+
+          titles.add("Hello aditi");
+          description.add(
+      "what about HeadAche");
+        imagenames.add("assets/graphics/emergency.png");
         }
 
       }
-     // saving the responses onto firebase
+    //  // saving the responses onto firebase
     Future<void> _responses(bool one,bool two,bool three,) async {
-    bool done = one;
-    bool not_done = two;
-    bool emergency = three;
-    String answer="";
+    // bool done = one;
+    // bool not_done = two;
+    // bool emergency = three;
+    // String answer="";
 
-    if(done)  answer = "Done";
-    else if (not_done)  answer = "remaining";
-    else if (emergency)  answer = "emergency";
+    // if(done)  answer = "Done";
+    // else if (not_done)  answer = "remaining";
+    // else if (emergency)  answer = "emergency";
 
 
-      await Firestore.instance.collection("seniors").document("6W10dAKIWpU9UWMSWisVXzhU5Em1").collection("default_ques").document("AAKLqmZ0tWWaXyHabgx0").setData({
-        'Do you have fever': true,        
+    //   await Firestore.instance.collection("seniors").document("6W10dAKIWpU9UWMSWisVXzhU5Em1").collection("default_ques").document("AAKLqmZ0tWWaXyHabgx0").setData({
+    //     'Do you have fever': true,        
 
-      });
+    //   });
       }

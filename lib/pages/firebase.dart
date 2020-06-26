@@ -1,5 +1,4 @@
 
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_widget/carousel_widget.dart';
@@ -7,7 +6,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 
 
 
-class MyCarousel extends StatelessWidget {
+
+class MyCarousell extends StatelessWidget {
 
 CarouselSlider carouselSlider;
 int i=0;
@@ -21,16 +21,19 @@ int i=0;
       appBar: AppBar(
         title:new Text("firestore"),
       ),
-      body: StreamBuilder(
-      stream: Firestore.instance.collection('ques').snapshots(),
+      body: StreamBuilder<QuerySnapshot>(
+      stream: Firestore.instance.collection('seniors').document("6W10dAKIWpU9UWMSWisVXzhU5Em1").collection("default_ques").snapshots(),
 
       builder: (context,snapshot){
         if(!snapshot.hasData) return Text(" hi just wait");
             return
              Container(
                child: Column(
+                 
                 children: <Widget>[
-                  Text(snapshot.data.documents[1]['name'])
+                  
+                     
+                  Text(snapshot.data.documents[0]['q1'])
                 ],
                
             ),

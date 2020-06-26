@@ -181,7 +181,7 @@
                           List<DocumentSnapshot> docs = snapshot.data.documents;
 
 
-                             titles.add('${docs[1]}');
+                             titles.add(docs[1].data['names']);
           description.add('hello');
           imagenames.add("assets/graphics/emergency.png");
                         }
@@ -195,10 +195,10 @@
       //         "How is your leg pain");
       //     imagenames.add("assets/graphics/man.png");
 
-      //     titles.add("Hello Jagrit");
-      //     description.add(
-      // "what about HeadAche");
-      //     imagenames.add("assets/graphics/emergency.png");
+          titles.add("Hello Jagrit");
+          description.add(
+      "what about HeadAche");
+          imagenames.add("assets/graphics/emergency.png");
         }
       }
 
