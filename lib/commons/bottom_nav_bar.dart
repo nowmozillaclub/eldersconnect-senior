@@ -139,15 +139,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   tag: 'SOSButton',
                   child: Consumer<AuthService>(
                     builder: (context, auth, child) {
-                      return FutureBuilder(
-                        future: auth.user,
-                        builder: (context, user) {
-                          if(user.connectionState == ConnectionState.waiting)
-                            return SOSButton(isPrimary: widget.currentSelected==0, isActive: false,);
-                          else
-                            return SOSButton(isPrimary: widget.currentSelected==0, isActive: user.data.sosStatus,);
-                        },
-                      );
+                      return SOSButton(isPrimary: widget.currentSelected==0, isActive: auth.user.sosStatus,);
                     },
                   )
               )

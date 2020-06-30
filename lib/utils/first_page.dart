@@ -1,3 +1,4 @@
+import 'package:ec_senior/models/user.dart';
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/pages/login_page.dart';
 import 'package:ec_senior/pages/qr_link_page.dart';
@@ -13,14 +14,24 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
+  Future<User> _user;
 
+
+  @override
+  void initState() {
+    super.initState();
+    AuthService auth = Provider.of<AuthService>(context, listen: false);
+    _user = auth.loadUser();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
-    AuthService _auth = Provider.of<AuthService>(context, listen: false);
+    AuthService auth = Provider.of<AuthService>(context, listen: false);
 
     return Scaffold(
       body: FutureBuilder(
-        future: _auth.user,
+        future: _user,
         builder: (context, user) {
           if(user.connectionState == ConnectionState.waiting)
             return Container(
@@ -36,15 +47,19 @@ class _FirstPageState extends State<FirstPage> {
                 ),
               ),
             );
-          else if(user.data == null)
-            return MyLoginPage();
-          else if(user.data.connectedToUid == null)
-            return MyQRLinkPage();
           else {
-            return MyHomePage();
+            auth.user = user.data;
+            if (user.data == null)
+              return MyLoginPage();
+            else if (user.data.connectedToUid == null)
+              return MyQRLinkPage();
+            else {
+              return MyHomePage();
+            }
           }
         },
       ),
     );
   }
 }
+//TODO: Improve Navigation
