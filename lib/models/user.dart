@@ -6,6 +6,7 @@ class User {
   final String photoUrl;
   final String connectedToUid;
   final String connectedToName;
+  final String connectedToPhone;
   final bool sosStatus;
 
   User({
@@ -17,18 +18,20 @@ class User {
     this.connectedToUid,
     this.connectedToName,
     this.sosStatus,
+    this.connectedToPhone,
   });
 
   Map<String, dynamic> toJson() => {
-        'uid': uid,
-        'name': name,
-        'email': email,
-        'phone': phone,
-        'photoUrl': photoUrl,
-        'connectedToUid': connectedToUid,
-        'connectedToName': connectedToName,
-        'sosStatus':sosStatus,
-      };
+    'uid': uid,
+    'name': name,
+    'email': email,
+    'phone': phone,
+    'photoUrl': photoUrl,
+    'connectedToUid': connectedToUid,
+    'connectedToName': connectedToName,
+    'connectedToPhone': connectedToPhone,
+    'sosStatus':sosStatus,
+  };
 
   User.fromJson(Map<String, dynamic> json)
       : uid = json['uid'],
@@ -38,5 +41,6 @@ class User {
         photoUrl = json['photoUrl'],
         connectedToUid = json['connectedToUid'],
         connectedToName = json['connectedToName'],
+        connectedToPhone = json['connectedToPhone'],
         sosStatus = json['sosStatus'];
 }

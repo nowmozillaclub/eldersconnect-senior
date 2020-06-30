@@ -72,7 +72,7 @@ class MyQRLinkPage extends StatelessWidget {
                                 String juniorPhone = _docs[i].data['phone'];
                                 //TODO: Add with phone Number validation
 
-                                auth.updateUser(juniorUid, juniorName, juniorPhone!=null);
+                                auth.updateUser(juniorUid, juniorName, juniorPhone);
                               }
                             }
                             return _showQrCode(auth.user);

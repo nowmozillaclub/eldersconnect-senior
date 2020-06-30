@@ -149,5 +149,5 @@ class _BottomNavBarState extends State<BottomNavBar> {
     );
   }
 }
-//TODO: Smoother Transition for Home button
+//TODO: Smoother Transition for buttons
 //TODO: Improve positioning on elements

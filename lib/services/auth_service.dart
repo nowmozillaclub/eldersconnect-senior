@@ -35,6 +35,7 @@ class AuthService extends ChangeNotifier{
           photoUrl: userDoc.data['photoUrl'],
           connectedToUid: userDoc.data['connectedToUid'],
           connectedToName: userDoc.data['connectedToName'],
+          connectedToPhone: userDoc.data['connectedToPhone'],
           sosStatus: userDoc.data['sosStatus']
       );
 
@@ -74,6 +75,7 @@ class AuthService extends ChangeNotifier{
         'photoUrl': firebaseUser.photoUrl,
         'connectedToUid': null,
         'connectedToName': null,
+        'connectedToPhone': null,
         'sosStatus': false,
       });
 
@@ -85,6 +87,7 @@ class AuthService extends ChangeNotifier{
         photoUrl: firebaseUser.photoUrl,
         connectedToUid: null,
         connectedToName: null,
+        connectedToPhone: null,
         sosStatus: false,
       );
 
@@ -97,10 +100,11 @@ class AuthService extends ChangeNotifier{
     }
   }
 
-  Future<void> updateUser(String _connectedToUid, String _connectedToName, bool _sosStatus) async {
+  //method to connect to junior
+  Future<void> updateUser(String _connectedToUid, String _connectedToName, String _juniorPhone) async {
     // Handling Exceptions if any.
     try {
-      userInfo = User(
+      user = User(
         uid: userInfo.uid,
         name: userInfo.name,
         email: userInfo.email,
@@ -108,7 +112,8 @@ class AuthService extends ChangeNotifier{
         photoUrl: userInfo.photoUrl,
         connectedToUid: _connectedToUid,
         connectedToName: _connectedToName,
-        sosStatus: _sosStatus && userInfo.phone.isNotEmpty?true:false,
+        connectedToPhone: _juniorPhone,
+        sosStatus: _juniorPhone == null && userInfo.phone == null ?false:true,
       );
 
       await UserRepository().saveUser(userInfo);
@@ -124,12 +129,52 @@ class AuthService extends ChangeNotifier{
         'photoUrl': userInfo.photoUrl,
         'connectedToUid': userInfo.connectedToUid,
         'connectedToName': userInfo.connectedToName,
+        'connectedToPhone': userInfo.connectedToPhone,
         'sosStatus': userInfo.sosStatus,
       });
       notifyListeners();
     }
     catch(error) {
       print('Error: $error');
+    }
+  }
+
+  //method to change phone number
+  Future<void> verifyAndChangePhone(String newPhone) async {
+    if(newPhone.length == 10) {
+      //TODO: Add Phone Number Verification
+      try{
+        userInfo = User(
+          uid: userInfo.uid,
+          name: userInfo.name,
+          email: userInfo.email,
+          phone: newPhone,
+          photoUrl: userInfo.photoUrl,
+          connectedToUid: userInfo.connectedToUid,
+          connectedToName: userInfo.connectedToName,
+          sosStatus: userInfo.connectedToPhone!=null?true:false,
+        );
+
+        print(userInfo.phone);
+        UserRepository().saveUser(userInfo);
+
+        await _firestore.collection('seniors').document('${userInfo.uid}').setData({
+          'uid': userInfo.uid,
+          'name': userInfo.name,
+          'email': userInfo.email,
+          'phone': userInfo.phone,
+          'photoUrl': userInfo.photoUrl,
+          'connectedToUid': userInfo.connectedToUid,
+          'connectedToName': userInfo.connectedToName,
+          'connectedToPhone': userInfo.connectedToPhone,
+          'sosStatus': userInfo.sosStatus,
+        });
+
+        notifyListeners();
+      }
+      catch(err) {
+        print('Error: $err');
+      }
     }
   }
 
@@ -145,4 +190,4 @@ class AuthService extends ChangeNotifier{
 
 }
 
-//TODO: Hope everything runs
+//jAfvHkIScAsicFGSbt3T

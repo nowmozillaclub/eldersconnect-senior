@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:ec_senior/commons/popup_menu.dart';
+import 'package:ec_senior/commons/profile_detail_tile.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
@@ -13,6 +15,8 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
 
+  TextEditingController _newData = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,74 +26,197 @@ class _AccountPageState extends State<AccountPage> {
         child: CustomScrollView(
           slivers: <Widget>[
             Consumer<AuthService>(
+                builder: (context, auth, child) {
+                  return SliverPersistentHeader(
+                        delegate: ProfileDelegate(image: auth.user.photoUrl, name: auth.user.name),
+                        pinned: true,
+                      );
+                },
+              ),
+            Consumer<AuthService>(
               builder: (context, auth, child) {
-                return SliverPersistentHeader(
-                      delegate: MyDelegate(image: auth.user.photoUrl),
-                      pinned: true,
-                    );
+                return SliverToBoxAdapter(
+                  child: ProfileDetailTile(
+                    heading: 'Email',
+                    data: auth.user.email,
+                    editable: false,
+                  ),
+                );
               },
             ),
             Consumer<AuthService>(
               builder: (context, auth, child) {
-                return SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      return Card(
-                        elevation: 8.0,
-                        child: Container(
-                          height: 170.0,
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween,
+                return SliverToBoxAdapter(
+                  child: ProfileDetailTile(
+                    heading: 'Phone Number',
+                    data: auth.user.phone,
+                    editable: true,
+                    onTap: () {
+                      _newData.text = auth.user.phone;
+                      showDialog(
+                        context: context,
+                        child: AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment
-                                    .start,
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
+                                child: Text('New Phone Number', style: MyTextStyles.title,),
+                              ),
+                              Row(
                                 children: <Widget>[
                                   Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        8.0, 8.0, 0.0, 0.0),
-                                    child: Text('${details[index]}',
-                                      style: MyTextStyles.title,
+                                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
+                                    child: Text('+91'),
+                                  ),
+                                  Flexible(
+                                    child: TextField(
+                                      controller: _newData,
+                                      keyboardType: TextInputType.phone,
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        16.0, 0.0, 0.0, 0.0),
-                                    child: Text('${details[index]} dataaa',
-                                      style: MyTextStyles.subtitle,
-                                    ),
-                                  )
                                 ],
                               ),
-                              Material(
-                                type: MaterialType.transparency,
-                                child: InkWell(
-                                  onTap: () {
-                                    print('tapped');
-                                  },
-                                  splashColor: MyColors.primary,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.edit, size: 24.0,),
-                                  ),
-                                ),
-                              ),
+                              SizedBox(height: 20.0,)
                             ],
                           ),
-                        ),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('CLOSE', style: MyTextStyles.subtext,),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            OutlineButton(
+                              child: Text('ADD',
+                                style: MyTextStyles().variationOfExisting(
+                                    existing: MyTextStyles.subtext, newColor: MyColors.primary,
+                                ),
+                              ),
+                              borderSide: BorderSide(
+                                color: MyColors.primary,
+                                width: 1.0,
+                              ),
+                              onPressed: () async {
+                                await auth.verifyAndChangePhone(_newData.text);
+                                Navigator.of(context).pop();
+                                print(auth.user.phone);
+                              },
+                            )
+                          ],
+                        )
                       );
                     },
-                    childCount: details.length,
                   ),
                 );
               },
-            )
+            ),
+            Consumer<AuthService>(
+              builder: (context, auth, child) {
+                return SliverToBoxAdapter(
+                  child: ProfileDetailTile(
+                    heading: 'Junior Name',
+                    data: auth.user.connectedToName,
+                    editable: false,
+                  ),
+                );
+              },
+            ),
+            Consumer<AuthService>(
+              builder: (context, auth, child) {
+                return SliverToBoxAdapter(
+                  child: ProfileDetailTile(
+                    heading: 'Junior Id',
+                    data: auth.user.connectedToUid,
+                    editable: false,
+                  ),
+                );
+              },
+            ),
+            Consumer<AuthService>(
+              builder: (context, auth, child) {
+                return SliverToBoxAdapter(
+                  child: ProfileDetailTile(
+                    heading: 'Junior Phone Number',
+                    data: auth.user.connectedToPhone,
+                    editable: false,
+                  ),
+                );
+              },
+            ),
+            Consumer<AuthService>(
+              builder: (context, auth, child) {
+                return SliverToBoxAdapter(
+                  child: ProfileDetailTile(
+                    heading: 'SOS Status',
+                    data: auth.user.sosStatus?'Active':'Inactive',
+                    editable: !auth.user.sosStatus,
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          child: AlertDialog(
+                            content: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 4.0, 0, 4.0),
+                                  child: Builder(
+                                    builder: (context) {
+                                      if(auth.user.phone == null)
+                                        return Container(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Icon(Icons.warning),
+                                                ),
+                                                Container(
+                                                    child: Expanded(
+                                                        child: Text('TO ENABLE SOS BUTTON ADD PHONE NUMBER')
+                                                    )
+                                                ),
+                                              ],
+                                            )
+                                        );
+                                      else
+                                        return Container();
+                                    }
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 4.0, 0, 4.0),
+                                  child: Builder(
+                                    builder: (context) {
+                                      if(auth.user.connectedToPhone == null)
+                                        return Container(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Icon(Icons.warning),
+                                                ),
+                                                Container(
+                                                    child: Expanded(
+                                                        child: Text('TO ENABLE SOS BUTTON ADD JUNIOR\'S PHONE NUMBER')
+                                                    )
+                                                ),
+                                              ],
+                                            )
+                                        );
+                                      else
+                                        return Container();
+                                    },
+                                  ),
+                                ),
+                              ],
+                            )
+                          )
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -99,21 +226,25 @@ class _AccountPageState extends State<AccountPage> {
 
 
 
-class MyDelegate extends SliverPersistentHeaderDelegate {
+class ProfileDelegate extends SliverPersistentHeaderDelegate {
   final String image;
+  final String name;
 
-  MyDelegate({this.image});
+  ProfileDelegate({this.image, this.name});
 
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Stack(
       children: <Widget>[
-        Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: CachedNetworkImageProvider(image),
-                  fit: BoxFit.cover
-              )
+        Hero(
+          tag: 'icon',
+          child: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: CachedNetworkImageProvider(image),
+                    fit: BoxFit.cover
+                )
+            ),
           ),
         ),
         Container(
@@ -122,19 +253,19 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [MyColors.primary, Colors.transparent],
-                  stops: [0.01 + (shrinkOffset/200), 0.2 + (shrinkOffset/200)]
+                  stops: [0.01 + (shrinkOffset/maxExtent), 0.2 + (shrinkOffset/maxExtent)]
               )
           ),
         ),
         Positioned(
           bottom: 5.0,
-          left: 16.0 + (shrinkOffset/200 * (8.0+32.0)),
-          child: Text('Profile',
+          left: 16.0 + (shrinkOffset/maxExtent * 32.0),
+          child: Text('$name',
             style: MyTextStyles().variationOfExisting(existing: MyTextStyles.heading, newColor: MyColors.white),
           ),
         ),
         Positioned(
-          top: 20.0 * (shrinkOffset/200.0),
+          top: 20.0,
           child: Container(
             height: 50.0,
             width: MediaQuery.of(context).size.width,
@@ -145,21 +276,17 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
                 InkWell(
                   onTap: () {
                     print('leading');
+                    Navigator.of(context).pop();
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Icon(Icons.arrow_back_ios, size: 24.0, color: MyColors.white,),
                   ),
                 ),
-                InkWell(
-                  onTap: () {
-                    print('trailing');
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.menu, size: 24.0, color: MyColors.white,),
-                  ),
-                )
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomPopUpMenu(),
+                ),
               ],
             ),
           ),
@@ -172,16 +299,8 @@ class MyDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 
   @override
-  double get maxExtent => 200.0;
+  double get maxExtent => 300.0;
 
   @override
   double get minExtent => 70.0;
 }
-
-List<String> details = [
-  'Email',
-  'Phone Number',
-  'Junior Name',
-  'Junior Number',
-  'Reports',
-];

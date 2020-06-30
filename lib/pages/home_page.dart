@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ec_senior/commons/bottom_nav_bar.dart';
+import 'package:ec_senior/commons/display_picture.dart';
 import 'package:ec_senior/commons/custom_tile.dart';
 import 'package:ec_senior/pages/account_detail_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
@@ -41,16 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: MyColors.white,
                             child: Hero(
                               tag: 'icon',
-                              child: Container(
-                                width: 50.0,
-                                height: 50.0,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        image: CachedNetworkImageProvider(auth.user.photoUrl)
-                                    )
-                                ),
-                              ),
+                              child: DisplayPicture(img: CachedNetworkImageProvider(auth.user.photoUrl),)
                             ),
                           );
                   },
