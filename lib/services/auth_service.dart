@@ -104,7 +104,7 @@ class AuthService extends ChangeNotifier{
   Future<void> updateUser(String _connectedToUid, String _connectedToName, String _juniorPhone) async {
     // Handling Exceptions if any.
     try {
-      user = User(
+      userInfo = User(
         uid: userInfo.uid,
         name: userInfo.name,
         email: userInfo.email,
@@ -189,5 +189,3 @@ class AuthService extends ChangeNotifier{
   }
 
 }
-
-//jAfvHkIScAsicFGSbt3T
