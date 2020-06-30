@@ -37,7 +37,6 @@ class AuthService extends ChangeNotifier{
           connectedToName: userDoc.data['connectedToName'],
           sosStatus: userDoc.data['sosStatus']
       );
-
       return user;
     }
     catch (error) {
