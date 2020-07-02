@@ -17,6 +17,10 @@ class _AccountPageState extends State<AccountPage> {
 
   TextEditingController _newData = TextEditingController();
 
+  bool validate() {
+    return _newData.text.length == 10;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,60 +56,7 @@ class _AccountPageState extends State<AccountPage> {
                     data: auth.user.phone,
                     editable: true,
                     onTap: () {
-                      _newData.text = auth.user.phone;
-                      showDialog(
-                        context: context,
-                        child: AlertDialog(
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
-                                child: Text('New Phone Number', style: MyTextStyles.title,),
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
-                                    child: Text('+91'),
-                                  ),
-                                  Flexible(
-                                    child: TextField(
-                                      controller: _newData,
-                                      keyboardType: TextInputType.phone,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 20.0,)
-                            ],
-                          ),
-                          actions: <Widget>[
-                            FlatButton(
-                              child: Text('CLOSE', style: MyTextStyles.subtext,),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            OutlineButton(
-                              child: Text('ADD',
-                                style: MyTextStyles().variationOfExisting(
-                                    existing: MyTextStyles.subtext, newColor: MyColors.primary,
-                                ),
-                              ),
-                              borderSide: BorderSide(
-                                color: MyColors.primary,
-                                width: 1.0,
-                              ),
-                              onPressed: () async {
-                                await auth.verifyAndChangePhone(_newData.text);
-                                Navigator.of(context).pop();
-                                print(auth.user.phone);
-                              },
-                            )
-                          ],
-                        )
-                      );
+                      showCustom(context, auth.user.phone);
                     },
                   ),
                 );
@@ -139,7 +90,38 @@ class _AccountPageState extends State<AccountPage> {
                   child: ProfileDetailTile(
                     heading: 'Junior Phone Number',
                     data: auth.user.connectedToPhone,
-                    editable: false,
+                    editable: true,
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                        child: AlertDialog(
+                          content: Container(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(0, 8.0, 8.0, 0),
+                                  child: Icon(Icons.warning),
+                                ),
+                                Builder(
+                                  builder: (context) {
+                                    if(auth.user.connectedToPhone == null)
+                                      return Expanded(
+                                          child: Text("YOUR JUNIOR DOES NOT HAVE A PHONE NUMBER REGISTERED."
+                                              "\nTO ADD PHONE NUMBER AND ACTIVATE SOS BUTTON ASK JUNIOR TO ADD CONTACT INFO USING THE JUNIOR APP.")
+                                      );
+                                    else
+                                      return Expanded(
+                                          child: Text("TO CHANGE CONNECT TO A NEW JUNIOR USING THE RECCONECT TO JUNIOR OPTION")
+                                      );
+                                  },
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      );
+                    },
                   ),
                 );
               },
@@ -159,7 +141,7 @@ class _AccountPageState extends State<AccountPage> {
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 4.0, 0, 4.0),
+                                  padding: const EdgeInsets.fromLTRB(0, 4.0, 4.0, 4.0),
                                   child: Builder(
                                     builder: (context) {
                                       if(auth.user.phone == null)
@@ -184,7 +166,7 @@ class _AccountPageState extends State<AccountPage> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.fromLTRB(0, 4.0, 0, 4.0),
+                                  padding: const EdgeInsets.fromLTRB(0, 4.0, 4.0, 4.0),
                                   child: Builder(
                                     builder: (context) {
                                       if(auth.user.connectedToPhone == null)
@@ -304,3 +286,65 @@ class ProfileDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get minExtent => 70.0;
 }
+
+
+//AlertDialog(
+//content: Column(
+//mainAxisSize: MainAxisSize.min,
+//children: <Widget>[
+//Padding(
+//padding: const EdgeInsets.fromLTRB(0, 0, 0, 8.0),
+//child: Text('New Phone Number', style: MyTextStyles.title,),
+//),
+//Row(
+//children: <Widget>[
+//Padding(
+//padding: const EdgeInsets.fromLTRB(0.0, 0.0, 8.0, 0.0),
+//child: Text('+91'),
+//),
+//Flexible(
+//child: TextField(
+//controller: _newData,
+//keyboardType: TextInputType.phone,
+//decoration: InputDecoration(
+//errorText: _valid?null:'Invalid Number',
+//),
+//),
+//),
+//],
+//),
+//SizedBox(height: 20.0,)
+//],
+//),
+//actions: <Widget>[
+//FlatButton(
+//child: Text('CLOSE', style: MyTextStyles.subtext,),
+//onPressed: () {
+//Navigator.of(context).pop();
+//},
+//),
+//OutlineButton(
+//child: Text('ADD',
+//style: MyTextStyles().variationOfExisting(
+//existing: MyTextStyles.subtext, newColor: MyColors.primary,
+//),
+//),
+//borderSide: BorderSide(
+//color: MyColors.primary,
+//width: 1.0,
+//),
+//onPressed: () async {
+//setState(() {
+//_valid = validate();
+//});
+//if(_valid) {
+//Navigator.of(context).pop();
+//await auth.verifyAndChangePhone(_newData.text);
+//}
+//else {
+//
+//}
+//},
+//)
+//],
+//)

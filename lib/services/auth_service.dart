@@ -36,7 +36,7 @@ class AuthService extends ChangeNotifier{
           connectedToUid: userDoc.data['connectedToUid'],
           connectedToName: userDoc.data['connectedToName'],
           connectedToPhone: userDoc.data['connectedToPhone'],
-          sosStatus: userDoc.data['sosStatus']
+          sosStatus: userDoc.data['phone'] == null || userDoc.data['connectedToPhone'] == null ? false: true,
       );
 
       return user;
@@ -76,7 +76,6 @@ class AuthService extends ChangeNotifier{
         'connectedToUid': null,
         'connectedToName': null,
         'connectedToPhone': null,
-        'sosStatus': false,
       });
 
       userInfo = User(
@@ -130,7 +129,6 @@ class AuthService extends ChangeNotifier{
         'connectedToUid': userInfo.connectedToUid,
         'connectedToName': userInfo.connectedToName,
         'connectedToPhone': userInfo.connectedToPhone,
-        'sosStatus': userInfo.sosStatus,
       });
       notifyListeners();
     }
@@ -141,40 +139,39 @@ class AuthService extends ChangeNotifier{
 
   //method to change phone number
   Future<void> verifyAndChangePhone(String newPhone) async {
-    if(newPhone.length == 10) {
-      //TODO: Add Phone Number Verification
-      try{
-        userInfo = User(
-          uid: userInfo.uid,
-          name: userInfo.name,
-          email: userInfo.email,
-          phone: newPhone,
-          photoUrl: userInfo.photoUrl,
-          connectedToUid: userInfo.connectedToUid,
-          connectedToName: userInfo.connectedToName,
-          sosStatus: userInfo.connectedToPhone!=null?true:false,
-        );
+    if(newPhone == user.phone)
+      return;
+    //TODO: Add Phone Number Verification
+    try{
+      userInfo = User(
+        uid: userInfo.uid,
+        name: userInfo.name,
+        email: userInfo.email,
+        phone: newPhone,
+        photoUrl: userInfo.photoUrl,
+        connectedToUid: userInfo.connectedToUid,
+        connectedToName: userInfo.connectedToName,
+        connectedToPhone: userInfo.connectedToPhone,
+        sosStatus: userInfo.connectedToPhone!=null?true:false,
+      );
 
-        print(userInfo.phone);
-        UserRepository().saveUser(userInfo);
+      UserRepository().saveUser(userInfo);
 
-        await _firestore.collection('seniors').document('${userInfo.uid}').setData({
-          'uid': userInfo.uid,
-          'name': userInfo.name,
-          'email': userInfo.email,
-          'phone': userInfo.phone,
-          'photoUrl': userInfo.photoUrl,
-          'connectedToUid': userInfo.connectedToUid,
-          'connectedToName': userInfo.connectedToName,
-          'connectedToPhone': userInfo.connectedToPhone,
-          'sosStatus': userInfo.sosStatus,
-        });
+      await _firestore.collection('seniors').document('${userInfo.uid}').setData({
+        'uid': userInfo.uid,
+        'name': userInfo.name,
+        'email': userInfo.email,
+        'phone': userInfo.phone,
+        'photoUrl': userInfo.photoUrl,
+        'connectedToUid': userInfo.connectedToUid,
+        'connectedToName': userInfo.connectedToName,
+        'connectedToPhone': userInfo.connectedToPhone,
+      });
 
-        notifyListeners();
-      }
-      catch(err) {
-        print('Error: $err');
-      }
+      notifyListeners();
+    }
+    catch(err) {
+      print('Error: $err');
     }
   }
 

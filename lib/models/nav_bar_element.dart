@@ -1,6 +1,6 @@
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/pages/second_page.dart';
-import 'package:ec_senior/pages/third_page.dart';
+import 'package:ec_senior/pages/timetable_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -15,5 +15,5 @@ class NavBarElement {
 List<NavBarElement> navBarElements = [
   NavBarElement(icon: Icons.home, name: 'Home', pushToPage: MyHomePage()),
   NavBarElement(icon: Icons.style, name: 'Second', pushToPage: SecondPage()),
-  NavBarElement(icon: Icons.table_chart, name: 'Third', pushToPage: ThirdPage())
+  NavBarElement(icon: Icons.table_chart, name: 'TimeTable', pushToPage: TimeTablePage())
 ];
