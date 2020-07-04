@@ -25,4 +25,18 @@ class MyTextStyles {
     fontWeight: FontWeight.w400,
     color: MyColors.black,
   );
+
+  static const subtext = TextStyle(
+    fontSize: 14.0,
+    color: MyColors.shadow,
+  );
+
+  TextStyle variationOfExisting({TextStyle existing, Color newColor, FontWeight newFontWeight, double newFontSize}) {
+    return TextStyle(
+      color: newColor ?? existing.color,
+      fontWeight: newFontWeight ?? existing.fontWeight,
+      fontSize: newFontSize ?? existing.fontSize,
+    );
+  }
+
 }

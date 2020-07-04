@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ec_senior/models/user.dart';
-import 'package:ec_senior/services/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepository {
-
-  Future<User> get user => getUser();
 
   Future<void> saveUser(User user) async {
     final _prefs = await SharedPreferences.getInstance();
@@ -24,44 +21,12 @@ class UserRepository {
     }
   }
 
-  Future<void> updateUser(String _connectedToUid, String _connectedToName,) async {
-    User user = await AuthService().getUser();
-
-    user = User(
-      uid: user.uid,
-      name: user.name,
-      email: user.email,
-      phone: user.phone,
-      photoUrl: user.photoUrl,
-      connectedToUid: _connectedToUid,
-      connectedToName: _connectedToName,
-    );
-
-    await saveUser(user);
-
-    await Firestore.instance
-        .collection('seniors')
-        .document('${user.uid}')
-        .setData({
-      'uid': user.uid,
-      'name': user.name,
-      'email': user.email,
-      'phone': user.phone,
-      'photoUrl': user.photoUrl,
-      'connectedToUid': user.connectedToUid,
-      'connectedToName': user.connectedToName,
-    });
-  }
-
-
   Future<void> clearUser() async {
     User user = await getUser();
     await Firestore.instance.collection('seniors').document('${user.uid}').delete();
 
     final pref = await SharedPreferences.getInstance();
     pref.setString('user', null);
-    pref.setBool('isConnected', false);
-    pref.setBool('isFirstLaunch', true);
-
   }
+
 }
