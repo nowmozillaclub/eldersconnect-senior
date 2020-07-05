@@ -36,8 +36,10 @@ class AuthService extends ChangeNotifier{
           connectedToUid: userDoc.data['connectedToUid'],
           connectedToName: userDoc.data['connectedToName'],
           connectedToPhone: userDoc.data['connectedToPhone'],
+          timetableId: userDoc.data['timetableId'],
           sosStatus: userDoc.data['phone'] == null || userDoc.data['connectedToPhone'] == null ? false: true,
       );
+      notifyListeners();
 
       return user;
     }
@@ -76,6 +78,7 @@ class AuthService extends ChangeNotifier{
         'connectedToUid': null,
         'connectedToName': null,
         'connectedToPhone': null,
+        'timetableId': null,
       });
 
       userInfo = User(
@@ -87,6 +90,7 @@ class AuthService extends ChangeNotifier{
         connectedToUid: null,
         connectedToName: null,
         connectedToPhone: null,
+        timetableId: null,
         sosStatus: false,
       );
 
@@ -112,6 +116,7 @@ class AuthService extends ChangeNotifier{
         connectedToUid: _connectedToUid,
         connectedToName: _connectedToName,
         connectedToPhone: _juniorPhone,
+        timetableId: userInfo.timetableId,
         sosStatus: _juniorPhone == null && userInfo.phone == null ?false:true,
       );
 
@@ -129,6 +134,7 @@ class AuthService extends ChangeNotifier{
         'connectedToUid': userInfo.connectedToUid,
         'connectedToName': userInfo.connectedToName,
         'connectedToPhone': userInfo.connectedToPhone,
+        'timetableId': userInfo.timetableId,
       });
       notifyListeners();
     }
@@ -152,6 +158,7 @@ class AuthService extends ChangeNotifier{
         connectedToUid: userInfo.connectedToUid,
         connectedToName: userInfo.connectedToName,
         connectedToPhone: userInfo.connectedToPhone,
+        timetableId: userInfo.timetableId,
         sosStatus: userInfo.connectedToPhone!=null?true:false,
       );
 
@@ -165,6 +172,7 @@ class AuthService extends ChangeNotifier{
         'photoUrl': userInfo.photoUrl,
         'connectedToUid': userInfo.connectedToUid,
         'connectedToName': userInfo.connectedToName,
+        'timetableId': userInfo.timetableId,
         'connectedToPhone': userInfo.connectedToPhone,
       });
 
