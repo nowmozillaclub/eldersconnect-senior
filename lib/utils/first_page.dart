@@ -1,12 +1,12 @@
-import 'package:ec_senior/blocs/authentication_bloc/bloc.dart';
-import 'package:ec_senior/blocs/login_bloc/bloc.dart';
-import 'package:ec_senior/blocs/repositories/user_repository.dart';
+import 'package:ec_senior/models/user.dart';
 import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/pages/login_page.dart';
+import 'package:ec_senior/pages/qr_link_page.dart';
+import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class FirstPage extends StatefulWidget {
   @override
@@ -14,52 +14,52 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  void firstPageChecker() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
+  Future<User> _user;
 
-    Future.delayed(Duration(seconds: 1), () {
-      // splash screen kinda thing
-      if (isFirstLaunch) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => BlocProvider(
-                    create: (context) => LoginBloc(
-                        authenticationBloc:
-                            BlocProvider.of<AuthenticationBloc>(context),
-                        userRepository: UserRepository()),
-                    child: MyLoginPage(prefs: prefs))),
-            (Route<dynamic> route) => false);
-        // very first launch since install
-      } else {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => MyHomePage(prefs: prefs)),
-            (Route<dynamic> route) => false);
-      }
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    firstPageChecker();
+    AuthService auth = Provider.of<AuthService>(context, listen: false);
+    _user = auth.loadUser();
   }
 
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: MyColors.white,
-      child: Center(
-        child: Hero(
-          tag: 'icon',
-          child: Container(
-            height: 200.0,
-            width: 200.0,
-            child: Image.asset('assets/icon/icon-legacy.png'),
-          ),
-        ),
+
+    AuthService auth = Provider.of<AuthService>(context, listen: false);
+
+    return Scaffold(
+      body: FutureBuilder(
+        future: _user,
+        builder: (context, user) {
+          if(user.connectionState == ConnectionState.waiting)
+            return Container(
+              color: MyColors.white,
+              child: Center(
+                child: Hero(
+                  tag: 'icon',
+                  child: Container(
+                    height: 200.0,
+                    width: 200.0,
+                    child: Image.asset('assets/icon/icon-legacy.png'),
+                  ),
+                ),
+              ),
+            );
+          else {
+            auth.user = user.data;
+            if (user.data == null)
+              return MyLoginPage();
+            else if (user.data.connectedToUid == null)
+              return MyQRLinkPage();
+            else {
+              return MyHomePage();
+            }
+          }
+        },
       ),
     );
   }
 }
+//TODO: Improve Navigation

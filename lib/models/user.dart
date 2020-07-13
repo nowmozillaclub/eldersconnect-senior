@@ -1,34 +1,50 @@
 class User {
-  final String uuid;
+  final String uid;
   final String name;
   final String email;
+  final String phone;
   final String photoUrl;
-  final String connectedToUuid;
+  final String connectedToUid;
   final String connectedToName;
+  final String connectedToPhone;
+  final String timetableId;
+  final bool sosStatus;
 
   User({
-    this.uuid,
+    this.uid,
     this.name,
     this.email,
+    this.phone,
     this.photoUrl,
-    this.connectedToUuid,
+    this.connectedToUid,
     this.connectedToName,
+    this.connectedToPhone,
+    this.timetableId,
+    this.sosStatus,
   });
 
   Map<String, dynamic> toJson() => {
-        'uuid': uuid,
-        'name': name,
-        'email': email,
-        'photoUrl': photoUrl,
-        'connectedToUuid': connectedToUuid,
-        'connectedToName': connectedToName,
-      };
+    'uid': uid,
+    'name': name,
+    'email': email,
+    'phone': phone,
+    'photoUrl': photoUrl,
+    'connectedToUid': connectedToUid,
+    'connectedToName': connectedToName,
+    'connectedToPhone': connectedToPhone,
+    'timetableId': timetableId,
+    'sosStatus':sosStatus,
+  };
 
   User.fromJson(Map<String, dynamic> json)
-      : uuid = json['uuid'],
+      : uid = json['uid'],
         name = json['name'],
         email = json['email'],
+        phone = json['phone'],
         photoUrl = json['photoUrl'],
-        connectedToUuid = json['connectedToUuid'],
-        connectedToName = json['connectedToName'];
+        connectedToUid = json['connectedToUid'],
+        connectedToName = json['connectedToName'],
+        connectedToPhone = json['connectedToPhone'],
+        timetableId = json['timetableId'],
+        sosStatus = json['sosStatus'];
 }
