@@ -12,14 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers:  [
+      providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
         ChangeNotifierProxyProvider<AuthService, TimeTableProvider>(
-          create: (context) => TimeTableProvider(user: null),
-          update: (context, value, prev) {
-            print(value.user == null);
-            return TimeTableProvider(user: value.user);
-          },
+          create: (context) => TimeTableProvider(null),
+          update: (context, value, prev) => TimeTableProvider(value.user),
         ),
         ChangeNotifierProxyProvider<AuthService, Questionnaire>(
           create: (context) => Questionnaire(user: null),

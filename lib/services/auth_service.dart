@@ -69,6 +69,12 @@ class AuthService extends ChangeNotifier{
           await _firebaseAuth.signInWithCredential(authCredential);
       final FirebaseUser firebaseUser = authResult.user;
 
+      // TODO: Check Existence of user in Firestore and set data accordingly.
+      // Little bit more context hereL Whenever any existing user is logging in,
+      // Even thought the user is logged in, the code below resets everything to
+      // null. Thus, timeTableId is returning null even after loadUser is called.
+      // Take code from junior for reference for loading the user correctly,
+      // instead of setting everything to null on Firebase itself.
       await _firestore.collection('seniors').document('${firebaseUser.uid}').setData({
         'uid': firebaseUser.uid,
         'name': firebaseUser.displayName,

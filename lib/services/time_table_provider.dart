@@ -10,11 +10,13 @@ class TimeTableProvider extends ChangeNotifier{
 
   List<TimeTableItem> get timetable => _timetableList;
 
-  TimeTableProvider({@required this.user}) {
+  TimeTableProvider(this.user) {
     print('constructor called');
     print(this.user==null); //Not null till here
     getTimeTable();
   }
+
+  User get senior => user;
 
   Future<void> getTimeTable() async {
     if(user.timetableId!= null) { //error on this line

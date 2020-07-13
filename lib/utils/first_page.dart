@@ -52,7 +52,7 @@ class _FirstPageState extends State<FirstPage> {
             if (user.data == null)
               return MyLoginPage();
             else if (user.data.connectedToUid == null)
-              return MyQRLinkPage();
+              return MyHomePage();
             else {
               return MyHomePage();
             }

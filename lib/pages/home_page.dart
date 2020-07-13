@@ -6,6 +6,7 @@ import 'package:ec_senior/commons/pop_up_questions.dart';
 import 'package:ec_senior/pages/account_detail_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/services/questionnaire.dart';
+import 'package:ec_senior/services/time_table_provider.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,6 +37,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    AuthService authService = Provider.of<AuthService>(context);
+    TimeTableProvider tableProvider = Provider.of<TimeTableProvider>(context);
+
     return Scaffold(
       body: ChangeNotifierProvider(
         create: (context) => AuthService(),
@@ -110,9 +115,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     imgPath: 'assets/graphics/emergency.png',
                     onTap: () => print('Card tapped'),
                   ),
+
                 ],
               ),
-            ]
+              FlatButton(
+                child: Text('Oii'),
+                onPressed: () {
+                  print(authService.user.name);
+                  print(tableProvider.senior.uid);
+                },
+              ),
+            ],
           ),
         ),
       ),
