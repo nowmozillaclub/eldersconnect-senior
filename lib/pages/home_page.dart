@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ec_senior/commons/bottom_nav_bar.dart';
 import 'package:ec_senior/commons/display_picture.dart';
 import 'package:ec_senior/commons/custom_tile.dart';
+import 'package:ec_senior/commons/pop_up_questions.dart';
 import 'package:ec_senior/pages/account_detail_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
+import 'package:ec_senior/services/questionnaire.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +19,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  List<dynamic> quesForPopUp = [];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Questionnaire questionnaire = Provider.of<Questionnaire>(context);
+    questionnaire.getQuestionnaire().then((onValue) {
+      if(questionnaire.questions.length != 0) {
+        quesForPopUp = questionnaire.questions;
+        WidgetsBinding.instance.addPostFrameCallback(_showPopUpQuestion);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +117,37 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavBar(currentSelected: currentSelectedNavBar,),
+    );
+  }
+
+  _showPopUpQuestion(Duration dur) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return Container(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(5.0, 32.0, 0.0, 16.0),
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                      left: 20.0,
+                      top: 25.0,
+                      child: PopUpQuestion(questionsAndOptions: quesForPopUp,)
+                  ),
+                  Positioned(
+                    top: 0.0,
+                    left: 0.0,
+                    child: CircleAvatar(
+                      radius: 30.0,
+                      backgroundImage: AssetImage('assets/photo.jpg'),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        }
     );
   }
 }

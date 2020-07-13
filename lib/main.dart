@@ -1,4 +1,5 @@
 import 'package:ec_senior/services/auth_service.dart';
+import 'package:ec_senior/services/questionnaire.dart';
 import 'package:ec_senior/services/time_table_provider.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/first_page.dart';
@@ -19,7 +20,11 @@ class MyApp extends StatelessWidget {
             print(value.user == null);
             return TimeTableProvider(user: value.user);
           },
-        )
+        ),
+        ChangeNotifierProxyProvider<AuthService, Questionnaire>(
+          create: (context) => Questionnaire(user: null),
+          update: (context, value, prev) => Questionnaire(user: value.user),
+        ),
       ],
       child: MaterialApp(
         title: 'EldersConnect Senior',

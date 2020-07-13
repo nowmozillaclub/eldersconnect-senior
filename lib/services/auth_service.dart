@@ -79,6 +79,7 @@ class AuthService extends ChangeNotifier{
         'connectedToName': null,
         'connectedToPhone': null,
         'timetableId': null,
+        'quesLastUpdatedAt': null,
       });
 
       userInfo = User(
@@ -125,7 +126,7 @@ class AuthService extends ChangeNotifier{
       await Firestore.instance
           .collection('seniors')
           .document('${userInfo.uid}')
-          .setData({
+          .updateData({
         'uid': userInfo.uid,
         'name': userInfo.name,
         'email': userInfo.email,
@@ -164,7 +165,7 @@ class AuthService extends ChangeNotifier{
 
       UserRepository().saveUser(userInfo);
 
-      await _firestore.collection('seniors').document('${userInfo.uid}').setData({
+      await _firestore.collection('seniors').document('${userInfo.uid}').updateData({
         'uid': userInfo.uid,
         'name': userInfo.name,
         'email': userInfo.email,
