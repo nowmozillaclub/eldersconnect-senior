@@ -62,9 +62,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                                 onTap: () {
                                   setState(() {
                                     currentSelectedNavBar = index+1;
-                                    Navigator.pushAndRemoveUntil(context,
-                                        MaterialPageRoute(builder: (context) => navBarElements[index+1].pushToPage),
-                                        (Route<dynamic> route) => false);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => navBarElements[index+1].pushToPage));
                                   });
                                 },
                                 child: NavBarTile(
@@ -106,9 +104,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
                                   onTap: () {
                                     setState(() {
                                       currentSelectedNavBar = index;
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(builder: (context) => navBarElements[index].pushToPage),
-                                          (Route<dynamic> route) => false);
+                                      if( currentSelectedNavBar == 0)
+                                        Navigator.of(context).pop();
+                                      else
+                                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => navBarElements[index].pushToPage));
                                     });
                                   },
                                   child: NavBarTile(

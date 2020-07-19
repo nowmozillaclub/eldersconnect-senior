@@ -10,11 +10,19 @@ class SecondPage extends StatefulWidget {
 class _SecondPageState extends State<SecondPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Second Page', style: MyTextStyles.heading,),
+    return WillPopScope(
+      onWillPop: () async {
+        setState(() {
+          currentSelectedNavBar = 0;
+        });
+        return true;
+      },
+      child: Scaffold(
+        body: Center(
+          child: Text('Second Page', style: MyTextStyles.heading,),
+        ),
+        bottomNavigationBar: BottomNavBar(currentSelected: currentSelectedNavBar),
       ),
-      bottomNavigationBar: BottomNavBar(currentSelected: currentSelectedNavBar),
     );
   }
 }

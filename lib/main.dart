@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
           },
         ),
         ChangeNotifierProxyProvider<AuthService, Questionnaire>(
-          create: (context) => Questionnaire(user: null),
-          update: (context, value, prev) => Questionnaire(user: value.user),
+          create: (context) => Questionnaire(null),
+          update: (context, value, prev) => Questionnaire(value.user),
         ),
       ],
       child: MaterialApp(

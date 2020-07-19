@@ -23,14 +23,16 @@ class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> quesForPopUp = [];
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    Questionnaire questionnaire = Provider.of<Questionnaire>(context);
-    questionnaire.getQuestionnaire().then((onValue) {
-      if(questionnaire.questions.length != 0) {
-        quesForPopUp = questionnaire.questions;
-        WidgetsBinding.instance.addPostFrameCallback(_showPopUpQuestion);
-      }
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((callback) {
+      Questionnaire questionnaire = Provider.of<Questionnaire>(context, listen: false);
+      questionnaire.getQuestionnaire().then((onValue) {
+        if(questionnaire.questions.length != 0) {
+          quesForPopUp = questionnaire.questions;
+          _showPopUpQuestion();
+        }
+      });
     });
   }
 
@@ -120,11 +122,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  _showPopUpQuestion(Duration dur) {
+  _showPopUpQuestion() {
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) {
+          AuthService _auth = Provider.of<AuthService>(context);
           return Container(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(5.0, 32.0, 0.0, 16.0),
@@ -140,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     left: 0.0,
                     child: CircleAvatar(
                       radius: 30.0,
-                      backgroundImage: AssetImage('assets/photo.jpg'),
+                      backgroundImage: CachedNetworkImageProvider(_auth.user.photoUrl),
                     ),
                   )
                 ],
