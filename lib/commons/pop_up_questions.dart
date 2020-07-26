@@ -23,7 +23,8 @@ class _PopUpQuestionState extends State<PopUpQuestion> {
   int selectedOption;
   Color color;
   int currQuestionIndex;
-  List<int> asked = [];
+  List<String> asked = [];
+  List<String> answers = [];
 
   @override
   void initState() {
@@ -107,7 +108,7 @@ class _PopUpQuestionState extends State<PopUpQuestion> {
                         onPressed: () {
                           if(asked.length>0) {
                             Questionnaire _questionnaire = Provider.of<Questionnaire>(context, listen: false);
-                            _questionnaire.updateQuestionnaire(asked);
+                            _questionnaire.updateQuestionnaire(asked, answers);
                             Navigator.of(context).pop();
                           }
                         },
@@ -117,13 +118,12 @@ class _PopUpQuestionState extends State<PopUpQuestion> {
                         child: Text('Next',
                           style: TextStyle(color: color),),
                         onPressed: () {
-                          print('Question: $question');
-                          print('Answer: ${options[selectedOption]}');
                           setState(() {
-                            asked.add(currQuestionIndex);
+                            asked.add(question);
+                            answers.add(options[selectedOption]);
                             if(asked.length == widget.questionsAndOptions.length) {
                               Questionnaire _questionnaire = Provider.of<Questionnaire>(context, listen: false);
-                              _questionnaire.updateQuestionnaire(asked);
+                              _questionnaire.updateQuestionnaire(asked, answers);
                               Navigator.of(context).pop(asked);
                             }
                             else
@@ -147,8 +147,7 @@ class _PopUpQuestionState extends State<PopUpQuestion> {
       rand = Random().nextInt(widget.questionsAndOptions.length);
       bool repeated = false;
       for(int i= 0; i<asked.length; i++) {
-        print(asked[i]);
-        if (rand == asked[i])
+        if (widget.questionsAndOptions[rand].question == asked[i])
           repeated = true;
       }
       if(!repeated)

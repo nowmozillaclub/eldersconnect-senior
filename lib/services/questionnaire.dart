@@ -31,13 +31,14 @@ class Questionnaire extends ChangeNotifier{
     });
   }
 
-  Future<void> updateQuestionnaire(List<int> asked) async { //TODO: Add them to report collection
-    QuerySnapshot currQues = await _firestore.collection('seniors').document(user.uid).collection('todaysQuestions').getDocuments();
-    List<DocumentSnapshot> quesList = currQues.documents;
+  Future<void> updateQuestionnaire(List<String> asked, List<String> answers) async {
     for(int i=0; i<asked.length; i++) {
-      await _firestore.collection('seniors').document(user.uid).collection('todaysQuestions').document(quesList[asked[i]].documentID).delete();
+      questionsAndOptions.removeWhere((element) => element.question == asked[i]);
+
+      await _firestore.collection('seniors').document(user.uid).collection('todaysQuestions').document(asked[i]).delete();
+
+      await addToReports(asked[i], answers[i]);
     }
-    await getQuestionnaire();
   }
 
   // Create a fresh copy of questions in the seniors doc
@@ -49,5 +50,22 @@ class Questionnaire extends ChangeNotifier{
       });
     });
     await _firestore.collection('seniors').document(user.uid).updateData({'quesLastUpdatedAt': DateTime.now().weekday});
+  }
+
+  Future<void> addToReports(String question , String answer) async {
+    DocumentSnapshot queDoc = await _firestore.collection('seniors').document(user.uid).collection('reports').document(question).get();
+
+    if(queDoc.exists) {
+      List<dynamic> currAnswers = queDoc.data['answers'] ?? [];
+      currAnswers.add({'${DateTime.now().day.toString() + '-' + DateTime.now().month.toString()}': answer});
+      await _firestore.collection('seniors').document(user.uid).collection('reports')
+          .document(question).updateData({'answers': currAnswers});
+    }
+    else {
+      List<dynamic> currAnswers = [];
+      currAnswers.add({'${DateTime.now().day.toString() + '-' + DateTime.now().month.toString()}': answer});
+      await _firestore.collection('seniors').document(user.uid).collection('reports')
+          .document(question).setData({'answers': currAnswers});
+    }
   }
 }
