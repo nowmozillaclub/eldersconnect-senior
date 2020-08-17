@@ -22,7 +22,7 @@ class Questionnaire extends ChangeNotifier{
 
   Future<void> getQuestionnaire() async{
     DocumentSnapshot userDoc = await _firestore.collection('seniors').document(user.uid).get();
-    if(userDoc.data['quesLastUpdatedAt'] != DateTime.now().weekday)
+    if(userDoc.data['quesLastUpdatedAt'] != DateTime.now().day)
       await createTodaysQuestionnaire();
     questionsAndOptions = [];
     QuerySnapshot quesDocs = await _firestore.collection('seniors').document(user.uid).collection('todaysQuestions').getDocuments();
@@ -49,7 +49,7 @@ class Questionnaire extends ChangeNotifier{
         'options': doc.data['options']
       });
     });
-    await _firestore.collection('seniors').document(user.uid).updateData({'quesLastUpdatedAt': DateTime.now().weekday});
+    await _firestore.collection('seniors').document(user.uid).updateData({'quesLastUpdatedAt': DateTime.now().day});
   }
 
   Future<void> addToReports(String question , String answer) async {

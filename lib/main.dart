@@ -1,5 +1,5 @@
 import 'package:ec_senior/services/auth_service.dart';
-import 'package:ec_senior/services/questionnaire.dart';
+import 'package:ec_senior/services/questionnaire_provider.dart';
 import 'package:ec_senior/services/time_table_provider.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/first_page.dart';
@@ -15,10 +15,11 @@ class MyApp extends StatelessWidget {
       providers:  [
         ChangeNotifierProvider(create: (context) => AuthService()),
         ChangeNotifierProxyProvider<AuthService, TimeTableProvider>(
-          create: (context) => TimeTableProvider(user: null),
+          create: (context) {
+            return TimeTableProvider.toLoad(null);
+          },
           update: (context, value, prev) {
-            print(value.user == null);
-            return TimeTableProvider(user: value.user);
+            return TimeTableProvider.toLoad(value.user);
           },
         ),
         ChangeNotifierProxyProvider<AuthService, Questionnaire>(

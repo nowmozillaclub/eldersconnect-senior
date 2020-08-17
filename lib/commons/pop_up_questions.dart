@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:ec_senior/commons/pop_up_decor.dart';
 import 'package:ec_senior/models/question.dart';
-import 'package:ec_senior/services/questionnaire.dart';
+import 'package:ec_senior/services/questionnaire_provider.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

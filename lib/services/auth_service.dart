@@ -80,6 +80,7 @@ class AuthService extends ChangeNotifier{
         'connectedToPhone': null,
         'timetableId': null,
         'quesLastUpdatedAt': null,
+        'timetableLastUpdatedAt': null,
       });
 
       userInfo = User(

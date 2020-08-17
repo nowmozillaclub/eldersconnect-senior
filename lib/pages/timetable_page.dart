@@ -10,12 +10,9 @@ class TimeTablePage extends StatefulWidget {
 }
 
 class _TimeTablePageState extends State<TimeTablePage> {
+
   @override
   Widget build(BuildContext context) {
-
-    TimeTableProvider _timeTableProvider = Provider.of<TimeTableProvider>(context);
-    print(_timeTableProvider.timetable.length);
-
     return WillPopScope(
       onWillPop: () async {
         setState(() {
@@ -27,37 +24,33 @@ class _TimeTablePageState extends State<TimeTablePage> {
         appBar: AppBar(
           title: Text('TimeTable', style: MyTextStyles.heading,),
         ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            Builder(
-              builder: (context) {
-                if(_timeTableProvider.timetable.length == 0)
-                  return SliverToBoxAdapter(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage('assets/frame_101_delay-0.03s.png'),
-                              fit: BoxFit.cover
-                          )
-                      ),
-                    ),
-                  );
-                else {
-                  var _currTimetable = _timeTableProvider.timetable;
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                        return Container(
-                          child: Text('${_currTimetable[index].title}', style: MyTextStyles.title,),
-                        );
-                      },
-                      childCount: _timeTableProvider.timetable.length,
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
+        body: Consumer<TimeTableProvider>(
+          builder: (context, _timeTableProvider, child) {
+            if (_timeTableProvider.timetable.length == 0)
+              return Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/graphics/empty_list_bg.png'),
+                        fit: BoxFit.contain
+                    )
+                ),
+              );
+            else {
+              var _currTimetable = _timeTableProvider.timetable;
+              return Container(
+                height: MediaQuery.of(context).size.height - 100,
+                child: ListView.builder(
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                title: Text('${_currTimetable[index].title}'),
+                              );
+                            },
+                  itemCount: _timeTableProvider.timetable.length,
+                        ),
+              );
+            }
+          },
         ),
         bottomNavigationBar: BottomNavBar(currentSelected: currentSelectedNavBar),
       ),
