@@ -8,6 +8,7 @@ class TimeTableProvider extends ChangeNotifier{
   static User userInfo;
   final Firestore _firestore = Firestore.instance;
   static List<TimeTableItem> _timetableList = [];
+  static bool _lodaing = true;
 
   TimeTableProvider.toLoad(User u) {
     userInfo = u;
@@ -17,6 +18,7 @@ class TimeTableProvider extends ChangeNotifier{
   TimeTableProvider();
 
   List<TimeTableItem> get timetable => _timetableList;
+  bool get state => _lodaing;
 
   set user(User u) {
     userInfo = u;
@@ -25,17 +27,18 @@ class TimeTableProvider extends ChangeNotifier{
   User get user => userInfo;
 
   Future<void> getTimeTable() async {
+    _lodaing = true;
     if(user != null) {
       if(user.timetableId == null) {
         return;
       }
       DocumentSnapshot userDoc = await _firestore.collection('seniors').document(user.uid).get();
       DocumentSnapshot ttbDoc = await _firestore.collection('timetable').document(user.timetableId).get();
-      var updateTime = DateFormat('kk:mm-d').parse(userDoc.data['timetableLastUpdatedAt']);
-      var ttUpdateTime = DateFormat('kk:mm').parse(ttbDoc.data['timestamp']);
+      DateTime updateTime = DateFormat('kk:mm, dd, MM, yyyy').parse(userDoc.data['timetableLastUpdatedAt']);
+      DateTime ttUpdateTime = DateFormat('kk:mm, dd, MM, yyyy').parse(ttbDoc.data['timestamp']+', ${DateTime.now().month}, ${DateTime.now().year}');
       if( updateTime.day != DateTime.now().day)
         await createTodaysTimetable();
-      else if( updateTime.hour < ttUpdateTime.hour || updateTime.minute < ttUpdateTime.minute )
+      else if( updateTime.isBefore(ttUpdateTime))
         await createTodaysTimetable();
       _timetableList = [];
       QuerySnapshot ttDocs = await _firestore.collection('seniors').document(user.uid).collection('todaysTimetable').getDocuments();
@@ -49,6 +52,7 @@ class TimeTableProvider extends ChangeNotifier{
         _timetableList.add(item);
       });
     }
+    _lodaing = false;
     notifyListeners();
   }
 
@@ -71,9 +75,7 @@ class TimeTableProvider extends ChangeNotifier{
         });
       });
 
-      await _firestore.collection('timetable')
-          .document(user.timetableId)
-          .updateData({'timetable': newTimetable});
+      await _firestore.collection('seniors').document(user.uid).collection('todaysTimetable').document(_timetableList[index].title).updateData({'completed': true});
       notifyListeners();
       return 0;
     }
@@ -88,14 +90,10 @@ class TimeTableProvider extends ChangeNotifier{
     List<dynamic> timetable = doc.data['timetable'];
     int day = DateTime.now().weekday;
     QuerySnapshot oldtt = await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').getDocuments();
-    if( oldtt.documents.length != 0) {
-      var batch = _firestore.batch();
+    if( oldtt.documents.length != 0)
       oldtt.documents.forEach((element) {
-        DocumentReference docRef = element.reference;
-        batch.delete(docRef);
+        _firestore.collection('senior').document(userInfo.uid).collection('todaysTimetable').document(element.documentID).delete();//TODO: Replace with batch command
       });
-      batch.commit();
-    }
     timetable.forEach((element) {
       List<dynamic> days = element['days'];
       if(days.indexOf(day) != -1)
@@ -105,6 +103,6 @@ class TimeTableProvider extends ChangeNotifier{
           'completed': false,
         });
     });
-    _firestore.collection('seniors').document(userInfo.uid).updateData({'timetableLastUpdatedAt': '${DateTime.now().hour}:${DateTime.now().minute}-${DateTime.now().day}'});
+    _firestore.collection('seniors').document(userInfo.uid).updateData({'timetableLastUpdatedAt': '${DateFormat('kk:mm, dd, MM, yy').format(DateTime.now())}'});
   }
 }
