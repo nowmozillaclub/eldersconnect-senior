@@ -8,10 +8,13 @@ class TimeTableProvider extends ChangeNotifier{
   static User userInfo;
   final Firestore _firestore = Firestore.instance;
   static List<TimeTableItem> _timetableList = [];
-  static bool _lodaing = true;
+  static bool _lodaing;
+  static DateTime _dateTime;
 
   TimeTableProvider.toLoad(User u) {
     userInfo = u;
+    _lodaing = true;
+    _dateTime = DateTime.now();
     getTimeTable();
   }
 
@@ -27,82 +30,103 @@ class TimeTableProvider extends ChangeNotifier{
   User get user => userInfo;
 
   Future<void> getTimeTable() async {
-    _lodaing = true;
-    if(user != null) {
-      if(user.timetableId == null) {
-        return;
-      }
-      DocumentSnapshot userDoc = await _firestore.collection('seniors').document(user.uid).get();
-      DocumentSnapshot ttbDoc = await _firestore.collection('timetable').document(user.timetableId).get();
-      DateTime updateTime = DateFormat('kk:mm, dd, MM, yyyy').parse(userDoc.data['timetableLastUpdatedAt']);
-      DateTime ttUpdateTime = DateFormat('kk:mm, dd, MM, yyyy').parse(ttbDoc.data['timestamp']+', ${DateTime.now().month}, ${DateTime.now().year}');
-      if( updateTime.day != DateTime.now().day)
-        await createTodaysTimetable();
-      else if( updateTime.isBefore(ttUpdateTime))
-        await createTodaysTimetable();
-      _timetableList = [];
-      QuerySnapshot ttDocs = await _firestore.collection('seniors').document(user.uid).collection('todaysTimetable').getDocuments();
-      ttDocs.documents.forEach((element) {
-        var item = new TimeTableItem(
-          title: element.documentID,
-          time: element['time'],
-          completed: element['completed'],
-          days: element['days'],
-        );
-        _timetableList.add(item);
-      });
+    if( userInfo == null || userInfo.timetableId == null) {
+      _lodaing = false;
+      return;
     }
+    DocumentSnapshot doc = await _firestore.collection('seniors').document(userInfo.uid).get();
+    _lodaing = true;
+    DateTime lastUpdate = DateFormat('kk:mm, dd-MM-yyyy').parse(doc.data['timetableLastUpdatedAt']);
+    QuerySnapshot currTtDocs = await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').getDocuments();
+    if( _dateTime.day != lastUpdate.day ) {
+      if( currTtDocs.documents.length == 0 )
+        await createTodaysTimetable();
+      else {
+        await makeReport();
+        await clearTimetable();
+        await createTodaysTimetable();
+      }
+    }
+    else {
+      DocumentSnapshot ttDoc = await _firestore.collection('timetable').document('example').collection('timetable').document('${_dateTime.weekday}').get();
+      DateTime ttLastUpdate = DateFormat('kk:mm, dd-MM-yyyy').parse(ttDoc.data['timestamp']);
+      if( lastUpdate.isBefore(ttLastUpdate) )
+        await updateTodaysTimetable();
+    }
+    QuerySnapshot newTimetable = await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').getDocuments();
+//    print(newTimetable.documents.length == currTtDocs.documents.length);
+    _timetableList = [];
+    newTimetable.documents.forEach((element) {
+      _timetableList.add(TimeTableItem(
+        title: element.documentID,
+        time: element.data['time'],
+        otherDays: element.data['otherDays'],
+        completed: element.data['completed'],
+      ));
+    });
     _lodaing = false;
     notifyListeners();
   }
 
-  Future<int> markAsCompleted(int index) async {
-    try {
-      _timetableList[index] = TimeTableItem(
-          title: _timetableList[index].title,
-          time: _timetableList[index].time,
-          completed: true,
-          days: _timetableList[index].days
-      );
-
-      List<dynamic> newTimetable = [];
-      _timetableList.forEach((element) {
-        newTimetable.add({
-          'title': element.title,
-          'time': element.time,
-          'days': element.days,
-          'completed': element.completed,
-        });
-      });
-
-      await _firestore.collection('seniors').document(user.uid).collection('todaysTimetable').document(_timetableList[index].title).updateData({'completed': true});
-      notifyListeners();
-      return 0;
-    }
-    catch(err) {
-      notifyListeners();
-      return 1;
-    }
-  }
-
   Future<void> createTodaysTimetable() async {
-    DocumentSnapshot doc = await _firestore.collection('timetable').document(userInfo.timetableId).get();
-    List<dynamic> timetable = doc.data['timetable'];
-    int day = DateTime.now().weekday;
-    QuerySnapshot oldtt = await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').getDocuments();
-    if( oldtt.documents.length != 0)
-      oldtt.documents.forEach((element) {
-        _firestore.collection('senior').document(userInfo.uid).collection('todaysTimetable').document(element.documentID).delete();//TODO: Replace with batch command
-      });
-    timetable.forEach((element) {
-      List<dynamic> days = element['days'];
-      if(days.indexOf(day) != -1)
+    DocumentSnapshot ttDoc = await _firestore.collection('timetable').document('example').collection('timetable').document('${_dateTime.weekday}').get();
+    if( ttDoc.exists) {
+      List<dynamic> tasks = ttDoc.data['tasks'];
+      tasks.forEach((element) {
+        _timetableList.add(
+            TimeTableItem(title: element['title'], time: element['time'], otherDays: element['otherDays'], completed: false));
         _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').document(element['title']).setData({
           'time': element['time'],
-          'days': element['days'],
+          'otherDays': element['otherDays'],
           'completed': false,
         });
+      });
+    }
+    await _firestore.collection('seniors').document(userInfo.uid).updateData({'timetableLastUpdatedAt': DateFormat('kk:mm, dd-MM-yyyy').format(DateTime.now())});
+  }
+
+  Future<void> updateTodaysTimetable() async {
+    //TODO: Read new timetable
+    //TODO: Check if already in current timetable
+    //TODO: Add if not
+    await _firestore.collection('seniors').document(userInfo.uid).updateData({'timetableLastUpdatedAt': DateFormat('kk:mm, dd-MM-yyyy').format(DateTime.now())});
+  }
+
+  Future<void> makeReport() async {
+    List<dynamic> records = [];
+    QuerySnapshot tasks = await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').getDocuments();
+    tasks.documents.forEach((element) {
+      records.add({
+        'title': element.documentID,
+        'time': element.data['time'],
+        'completed': element.data['completed'],
+      });
     });
-    _firestore.collection('seniors').document(userInfo.uid).updateData({'timetableLastUpdatedAt': '${DateFormat('kk:mm, dd, MM, yy').format(DateTime.now())}'});
+    await _firestore.collection('seniors').document(userInfo.uid).collection('timetableReports')
+        .document('${DateFormat('dd-MM-yyyy').format(DateTime.now().subtract(Duration(days: 1)))}').setData({
+      'records': records,
+    });
+  }
+
+  Future<void> clearTimetable() async {
+    QuerySnapshot currTtDocs = await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').getDocuments();
+    currTtDocs.documents.forEach((element) async {
+      await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').document(element.documentID).delete();
+    });
+    //TODO: Use batch commands
+  }
+
+  Future<void> toggleStatus(int index) async {
+    TimeTableItem element = _timetableList[index];
+    await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').document(element.title).updateData({
+      'completed': !element.completed,
+    });
+    _timetableList[index] = TimeTableItem(
+      title: element.title,
+      time: element.time,
+      completed: !element.completed,
+      otherDays: element.otherDays,
+    );
+    notifyListeners();
   }
 }

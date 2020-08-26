@@ -40,8 +40,8 @@ flutter:
   uses-material-design: true
 
   assets:
-     - assets/graphics/
-     - assets/icon/
+    - assets/graphics/
+    - assets/icon/
 
   fonts:
     - family: LexendDeca

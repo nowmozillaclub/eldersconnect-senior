@@ -63,7 +63,7 @@ class Questionnaire extends ChangeNotifier{
     }
     else {
       List<dynamic> currAnswers = [];
-      currAnswers.add({'${DateTime.now().day.toString() + '-' + DateTime.now().month.toString()}': answer});
+      currAnswers.add({'${DateTime.now().day.toString() + '-' + DateTime.now().month.toString() + '-' + DateTime.now().year.toString()}': answer});
       await _firestore.collection('seniors').document(user.uid).collection('reports')
           .document(question).setData({'answers': currAnswers});
     }

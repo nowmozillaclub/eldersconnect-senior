@@ -29,6 +29,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('TimeTable', style: MyTextStyles.heading,),
+          elevation: 0.0,
         ),
         body: Consumer<TimeTableProvider>(
           builder: (context, _timeTableProvider, child) {
@@ -60,35 +61,40 @@ class _TimeTablePageState extends State<TimeTablePage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
-                    
                     child: Column(
                       children: <Widget>[
                         Container(
                           width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height/3 + 25,
-                          color: Colors.yellow,
+                          height: MediaQuery.of(context).size.height/4,
+                          color: MyColors.primary,
                           child: Stack(
                             children: <Widget>[
                               Positioned(
-                                left: 20.0,
-                                bottom: 32.0,
+                                left: 30.0,
+                                bottom: 0.0,
                                 child: Container(
-                                  width: MediaQuery.of(context).size.width>MediaQuery.of(context).size.height?MediaQuery.of(context).size.height/3 - 64.0: MediaQuery.of(context).size.width/2 - 64.0,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black),
+                                  ),
+                                  width: MediaQuery.of(context).size.width/2,
+                                  height: MediaQuery.of(context).size.height/8,
                                   child: AspectRatio(
                                       aspectRatio: 1/1,
                                       child: CustomPaint(
                                         child: Container(),
-                                        foregroundPainter: CircleProgressBar(
+                                        foregroundPainter: MediaQuery.of(context).size.height > MediaQuery.of(context).size.width ?
+                                        CircleProgressBar(
                                           value: value,
                                           foregroundColor: Colors.purple,
                                           backgroundColor: Colors.blueGrey,
-                                        ),
+                                        ) :
+                                            null
                                       )
                                   ),
                                 ),
                               ),
                               Positioned(
-                                right: 20.0,
+                                right: 30.0,
                                 bottom: 32.0,
                                 child: Container(
                                     child: Column(
@@ -96,7 +102,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text('${DateTime.now().day}', style: TextStyle(fontSize: 70.0, fontWeight: FontWeight.w600),),
-                                        Text('${days[DateTime.now().weekday]}', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w400),),
+                                        Text('${days[DateTime.now().weekday - 1]}', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w400),),
                                       ],
                                     )),
                               )
@@ -115,21 +121,22 @@ class _TimeTablePageState extends State<TimeTablePage> {
                               title: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Text('${_currTimetable[index].title}', style: MyTextStyles().variationOfExisting(existing: MyTextStyles.heading, newColor: _currTimetable[index].completed ? MyColors.shadow : MyColors.primary),),
-                                  Text('Time: ${_currTimetable[index].time}'),
+                                  Text('${_currTimetable[index].title}', style: MyTextStyles().variationOfExisting(existing: MyTextStyles.heading, newColor: _currTimetable[index].completed ? MyColors.primary : MyColors.shadow),),
+                                  Text('Time: ${_currTimetable[index].time}', style: MyTextStyles.subtext,),
                                 ],
                               ),
-                              subtitle: Builder(
-                                    builder: (context) {
-                                      String otherDays = '';
-                                      for(int i=0; i < _currTimetable[index].days.length - 1; i++) {
-                                        var val = _currTimetable[index].days[i] - 1;
-                                        otherDays += days[val]+', ';
-                                      }
-                                      otherDays += days[(_currTimetable[index].days[_currTimetable[index].days.length - 1]) - 1];
-                                      return Text('$otherDays', maxLines: 1, overflow: TextOverflow.ellipsis,);
-                                    },
-                                  ),
+                              subtitle: _currTimetable[index].otherDays.length == 0 ? null :
+                                Builder(
+                                      builder: (context) {
+                                        String otherDays = '';
+                                        for(int i=0; i < _currTimetable[index].otherDays.length - 1; i++) {
+                                          var val = _currTimetable[index].otherDays[i] - 1;
+                                          otherDays += days[val]+', ';
+                                        }
+                                        otherDays += days[(_currTimetable[index].otherDays[_currTimetable[index].otherDays.length - 1]) - 1];
+                                        return Text('$otherDays', maxLines: 1, overflow: TextOverflow.ellipsis,);
+                                      },
+                                    ),
                               trailing: Material(
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -140,8 +147,7 @@ class _TimeTablePageState extends State<TimeTablePage> {
                                     child: Icon(Icons.check, size: 20.0, color: MyColors.white,),
                                   ),
                                   onTap: () {
-                                    if(!_currTimetable[index].completed)
-                                      _timeTableProvider.markAsCompleted(index);
+                                      _timeTableProvider.toggleStatus(index);
                                     }
                                 ),
                               ),
@@ -161,3 +167,5 @@ class _TimeTablePageState extends State<TimeTablePage> {
     );
   }
 }
+
+//TODO: All days except today in the days displayed below each task
