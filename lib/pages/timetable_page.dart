@@ -1,6 +1,11 @@
 import 'package:ec_senior/commons/bottom_nav_bar.dart';
+import 'package:ec_senior/commons/circle_progress_bar.dart';
+import 'package:ec_senior/services/time_table_provider.dart';
+import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TimeTablePage extends StatefulWidget {
   @override
@@ -8,13 +13,159 @@ class TimeTablePage extends StatefulWidget {
 }
 
 class _TimeTablePageState extends State<TimeTablePage> {
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text('Display Timetable Here', style: MyTextStyles.heading,),
+
+    List<String> days = ['Monday', 'Teusday', 'Wednusday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    return WillPopScope(
+      onWillPop: () async {
+        setState(() {
+          currentSelectedNavBar = 0;
+        });
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('TimeTable', style: MyTextStyles.heading,),
+          elevation: 0.0,
+        ),
+        body: Consumer<TimeTableProvider>(
+          builder: (context, _timeTableProvider, child) {
+            if(_timeTableProvider.state) {
+              return Center(
+                  child: Container(
+                      width: 50.0,
+                      height: 50.0,
+                      child: CircularProgressIndicator()
+                  )
+              );
+            }
+            else if (_timeTableProvider.timetable.length == 0)
+              return Container(
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('assets/graphics/empty_list_bg.png'),
+                        fit: BoxFit.contain
+                    )
+                ),
+              );
+            else {
+              var _currTimetable = _timeTableProvider.timetable;
+              var length = _currTimetable.length;
+              var completed = _currTimetable.where((element) => element.completed).length;
+              var value = completed/length;
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height/4,
+                          color: MyColors.primary,
+                          child: Stack(
+                            children: <Widget>[
+                              Positioned(
+                                left: 30.0,
+                                bottom: 0.0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black),
+                                  ),
+                                  width: MediaQuery.of(context).size.width/2,
+                                  height: MediaQuery.of(context).size.height/8,
+                                  child: AspectRatio(
+                                      aspectRatio: 1/1,
+                                      child: CustomPaint(
+                                        child: Container(),
+                                        foregroundPainter: MediaQuery.of(context).size.height > MediaQuery.of(context).size.width ?
+                                        CircleProgressBar(
+                                          value: value,
+                                          foregroundColor: Colors.purple,
+                                          backgroundColor: Colors.blueGrey,
+                                        ) :
+                                            null
+                                      )
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                right: 30.0,
+                                bottom: 32.0,
+                                child: Container(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text('${DateTime.now().day}', style: TextStyle(fontSize: 70.0, fontWeight: FontWeight.w600),),
+                                        Text('${days[DateTime.now().weekday - 1]}', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w400),),
+                                      ],
+                                    )),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return Card(
+                            elevation: 3.0,
+                            child: ListTile(
+                              title: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text('${_currTimetable[index].title}', style: MyTextStyles().variationOfExisting(existing: MyTextStyles.heading, newColor: _currTimetable[index].completed ? MyColors.primary : MyColors.shadow),),
+                                  Text('Time: ${_currTimetable[index].time}', style: MyTextStyles.subtext,),
+                                ],
+                              ),
+                              subtitle: _currTimetable[index].otherDays.length == 0 ? null :
+                                Builder(
+                                      builder: (context) {
+                                        String otherDays = '';
+                                        for(int i=0; i < _currTimetable[index].otherDays.length - 1; i++) {
+                                          var val = _currTimetable[index].otherDays[i] - 1;
+                                          otherDays += days[val]+', ';
+                                        }
+                                        otherDays += days[(_currTimetable[index].otherDays[_currTimetable[index].otherDays.length - 1]) - 1];
+                                        return Text('$otherDays', maxLines: 1, overflow: TextOverflow.ellipsis,);
+                                      },
+                                    ),
+                              trailing: Material(
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                                child: InkWell(
+                                  child: CircleAvatar(
+                                    radius: 20.0,
+                                    backgroundColor: _currTimetable[index].completed ? MyColors.primary: MyColors.shadow,
+                                    child: Icon(Icons.check, size: 20.0, color: MyColors.white,),
+                                  ),
+                                  onTap: () {
+                                      _timeTableProvider.toggleStatus(index);
+                                    }
+                                ),
+                              ),
+                            ),
+                          );
+                          },
+                        itemCount: _timeTableProvider.timetable.length,
+                      ),
+                  ),
+                ],
+              );
+            }
+          },
+        ),
+        bottomNavigationBar: BottomNavBar(currentSelected: currentSelectedNavBar),
       ),
-      bottomNavigationBar: BottomNavBar(currentSelected: currentSelectedNavBar),
     );
   }
 }
+
+//TODO: All days except today in the days displayed below each task

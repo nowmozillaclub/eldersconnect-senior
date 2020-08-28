@@ -36,8 +36,10 @@ class AuthService extends ChangeNotifier{
           connectedToUid: userDoc.data['connectedToUid'],
           connectedToName: userDoc.data['connectedToName'],
           connectedToPhone: userDoc.data['connectedToPhone'],
+          timetableId: userDoc.data['timetableId'],
           sosStatus: userDoc.data['phone'] == null || userDoc.data['connectedToPhone'] == null ? false: true,
       );
+      notifyListeners();
 
       return user;
     }
@@ -76,6 +78,9 @@ class AuthService extends ChangeNotifier{
         'connectedToUid': null,
         'connectedToName': null,
         'connectedToPhone': null,
+        'timetableId': null,
+        'quesLastUpdatedAt': null,
+        'timetableLastUpdatedAt': null,
       });
 
       userInfo = User(
@@ -87,6 +92,7 @@ class AuthService extends ChangeNotifier{
         connectedToUid: null,
         connectedToName: null,
         connectedToPhone: null,
+        timetableId: null,
         sosStatus: false,
       );
 
@@ -112,6 +118,7 @@ class AuthService extends ChangeNotifier{
         connectedToUid: _connectedToUid,
         connectedToName: _connectedToName,
         connectedToPhone: _juniorPhone,
+        timetableId: userInfo.timetableId,
         sosStatus: _juniorPhone == null && userInfo.phone == null ?false:true,
       );
 
@@ -120,7 +127,7 @@ class AuthService extends ChangeNotifier{
       await Firestore.instance
           .collection('seniors')
           .document('${userInfo.uid}')
-          .setData({
+          .updateData({
         'uid': userInfo.uid,
         'name': userInfo.name,
         'email': userInfo.email,
@@ -129,6 +136,7 @@ class AuthService extends ChangeNotifier{
         'connectedToUid': userInfo.connectedToUid,
         'connectedToName': userInfo.connectedToName,
         'connectedToPhone': userInfo.connectedToPhone,
+        'timetableId': userInfo.timetableId,
       });
       notifyListeners();
     }
@@ -152,12 +160,13 @@ class AuthService extends ChangeNotifier{
         connectedToUid: userInfo.connectedToUid,
         connectedToName: userInfo.connectedToName,
         connectedToPhone: userInfo.connectedToPhone,
+        timetableId: userInfo.timetableId,
         sosStatus: userInfo.connectedToPhone!=null?true:false,
       );
 
       UserRepository().saveUser(userInfo);
 
-      await _firestore.collection('seniors').document('${userInfo.uid}').setData({
+      await _firestore.collection('seniors').document('${userInfo.uid}').updateData({
         'uid': userInfo.uid,
         'name': userInfo.name,
         'email': userInfo.email,
@@ -165,6 +174,7 @@ class AuthService extends ChangeNotifier{
         'photoUrl': userInfo.photoUrl,
         'connectedToUid': userInfo.connectedToUid,
         'connectedToName': userInfo.connectedToName,
+        'timetableId': userInfo.timetableId,
         'connectedToPhone': userInfo.connectedToPhone,
       });
 
