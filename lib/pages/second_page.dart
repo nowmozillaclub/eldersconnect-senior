@@ -49,7 +49,7 @@ class _SecondPageState extends State<SecondPage> {
             child: Text('Call Native'),
             onPressed: () async {
               try {
-                var res = await platform.invokeMethod('schedule_alarm', {"alarmId": Random().nextInt(1000), "hour": 0, "minute": 52, "title": "Alarm Trial", "created": 101, "started": false, "recurring": false, "monday": false, "teusday": false, "wednesday": false, "thursday": false, "friday": false, "saturday": false, "sunday": true});
+                var res = await platform.invokeMethod('schedule_alarm', {"alarmId": Random().nextInt(1000), "hour": 12, "minute": 03, "title": "Alarm Trial", "created": 101, "started": false, "recurring": false, "monday": true, "tuesday": false, "wednesday": false, "thursday": false, "friday": false, "saturday": false, "sunday": false});
                 print(res);
               } on PlatformException catch(e) {
                 print('failed, error: $e');

@@ -46,24 +46,38 @@ public class MainActivity extends FlutterActivity {
                                     call.argument("saturday") == null ||
                                     call.argument("sunday") == null
                             ) {
-                                result.error("68", "one or more parameters passed were null", String.format(""));
+                                result.error("68", "one or more parameters passed were null",
+                                        String.format("%d, %d, %d, %s, %d, %b, %b, %b, %b, %b, %b, %b, %b, %b", call.argument("alarmId"),
+                                                call.argument("hour"),
+                                                call.argument("minute"),
+                                                call.argument("title"),
+                                                call.argument("created"),
+                                                call.argument("started"),
+                                                call.argument("recurring"),
+                                                call.argument("monday"),
+                                                call.argument("tuesday"),
+                                                call.argument("wednesday"),
+                                                call.argument("thursday"),
+                                                call.argument("friday"),
+                                                call.argument("saturday"),
+                                                call.argument("sunday")));
                                 break;
                             }
                             Alarm alarm = new Alarm(
-                                    call.argument("alarmId"),
-                                    call.argument("hour"),
-                                    call.argument("minute"),
+                                    (int)call.argument("alarmId"),
+                                    (int)call.argument("hour"),
+                                    (int)call.argument("minute"),
                                     call.argument("title"),
-                                    call.argument("created"),
-                                    call.argument("started"),
-                                    call.argument("recurring"),
-                                    call.argument("monday"),
-                                    call.argument("tuesday"),
-                                    call.argument("wednesday"),
-                                    call.argument("thursday"),
-                                    call.argument("friday"),
-                                    call.argument("saturday"),
-                                    call.argument("sunday")
+                                    ((Number)call.argument("created")).longValue(),
+                                    (boolean)call.argument("started"),
+                                    (boolean)call.argument("recurring"),
+                                    (boolean)call.argument("monday"),
+                                    (boolean)call.argument("tuesday"),
+                                    (boolean)call.argument("wednesday"),
+                                    (boolean)call.argument("thursday"),
+                                    (boolean)call.argument("friday"),
+                                    (boolean)call.argument("saturday"),
+                                    (boolean)call.argument("sunday")
                             );
                             alarm.schedule(MainActivity.this);
                             result.success("Alarm Set");
