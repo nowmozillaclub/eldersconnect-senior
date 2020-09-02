@@ -3,12 +3,14 @@ package club.nowmozilla.ec_senior.activities;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
 import java.lang.reflect.Array;
 
 import club.nowmozilla.ec_senior.data.Alarm;
+import club.nowmozilla.ec_senior.service.AlarmService;
 import io.flutter.app.FlutterActivity;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
@@ -46,21 +48,7 @@ public class MainActivity extends FlutterActivity {
                                     call.argument("saturday") == null ||
                                     call.argument("sunday") == null
                             ) {
-                                result.error("68", "one or more parameters passed were null",
-                                        String.format("%d, %d, %d, %s, %d, %b, %b, %b, %b, %b, %b, %b, %b, %b", call.argument("alarmId"),
-                                                call.argument("hour"),
-                                                call.argument("minute"),
-                                                call.argument("title"),
-                                                call.argument("created"),
-                                                call.argument("started"),
-                                                call.argument("recurring"),
-                                                call.argument("monday"),
-                                                call.argument("tuesday"),
-                                                call.argument("wednesday"),
-                                                call.argument("thursday"),
-                                                call.argument("friday"),
-                                                call.argument("saturday"),
-                                                call.argument("sunday")));
+                                result.error("68", "one or more parameters passed were null", null);
                                 break;
                             }
                             Alarm alarm = new Alarm(

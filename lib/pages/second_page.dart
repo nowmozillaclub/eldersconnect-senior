@@ -12,27 +12,10 @@ class SecondPage extends StatefulWidget {
 
 class _SecondPageState extends State<SecondPage> {
   static final platform = MethodChannel('ec_senior/alarm_service');
-  static final CHANNEL_ID = "ALARM_SERVICE_STARTED";
-
-  Future<void> response(MethodCall call) async {
-    switch(call.method) {
-      case 'response':
-        hiFromFlutter(call.arguments);
-        break;
-      default:
-        print('no corresponding method');
-    }
-  }
-
-  void hiFromFlutter(dynamic args) {
-    print('Thanks ${args.toString()}');
-  }
 
   @override
   Widget build(BuildContext context) {
 
-    MethodChannel flutterChannel = MethodChannel(CHANNEL_ID);
-    flutterChannel.setMethodCallHandler(response);
     GlobalKey _key = GlobalKey<ScaffoldState>();
 
     return WillPopScope(
@@ -49,7 +32,7 @@ class _SecondPageState extends State<SecondPage> {
             child: Text('Call Native'),
             onPressed: () async {
               try {
-                var res = await platform.invokeMethod('schedule_alarm', {"alarmId": Random().nextInt(1000), "hour": 12, "minute": 03, "title": "Alarm Trial", "created": 101, "started": false, "recurring": false, "monday": true, "tuesday": false, "wednesday": false, "thursday": false, "friday": false, "saturday": false, "sunday": false});
+                var res = await platform.invokeMethod('schedule_alarm', {"alarmId": Random().nextInt(1000), "hour": 21, "minute": 02, "title": "Alarm Trial", "created": 101, "started": false, "recurring": false, "monday": true, "tuesday": false, "wednesday": false, "thursday": false, "friday": false, "saturday": false, "sunday": false});
                 print(res);
               } on PlatformException catch(e) {
                 print('failed, error: $e');
