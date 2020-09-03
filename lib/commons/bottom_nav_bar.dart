@@ -1,6 +1,7 @@
 import 'package:ec_senior/commons/nav_bar_tile.dart';
 import 'package:ec_senior/commons/sos_button.dart';
 import 'package:ec_senior/models/nav_bar_element.dart';
+import 'package:ec_senior/pages/home_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/utils/bottom_nav_bar_background.dart';
 import 'package:flutter/cupertino.dart';
@@ -105,7 +106,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
                                     setState(() {
                                       currentSelectedNavBar = index;
                                       if( currentSelectedNavBar == 0)
-                                        Navigator.of(context).pop();
+                                        if( Navigator.canPop(context))
+                                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyHomePage()), (route) => false);
+                                        else
+                                          Navigator.of(context).pop();
                                       else
                                         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => navBarElements[index].pushToPage));
                                     });

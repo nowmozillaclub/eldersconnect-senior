@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:ec_senior/commons/bottom_nav_bar.dart';
 import 'package:ec_senior/main.dart';
+import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -23,7 +24,6 @@ class _SecondPageState extends State<SecondPage> {
         setState(() {
           currentSelectedNavBar = 0;
         });
-        print(Navigator.canPop(context));
         if(!Navigator.canPop(context))
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyApp()), (route) => false);
         return true;
@@ -31,17 +31,7 @@ class _SecondPageState extends State<SecondPage> {
       child: Scaffold(
         key: _key,
         body: Center(
-          child: FlatButton(
-            child: Text('Call Native'),
-            onPressed: () async {
-              try {
-                var res = await platform.invokeMethod('schedule_alarm', {"alarmId": Random().nextInt(1000), "hour": 18, "minute": 41, "title": "Alarm Trial", "created": 101, "started": false, "recurring": false, "monday": true, "tuesday": false, "wednesday": false, "thursday": false, "friday": false, "saturday": false, "sunday": false});
-                print(res);
-              } on PlatformException catch(e) {
-                print('failed, error: $e');
-              }
-            },
-          )
+          child: Text("Second Page", style: MyTextStyles.heading,)
         ),
         bottomNavigationBar: BottomNavBar(currentSelected: currentSelectedNavBar),
       ),
