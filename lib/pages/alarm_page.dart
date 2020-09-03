@@ -1,3 +1,6 @@
+import 'package:ec_senior/commons/bottom_nav_bar.dart';
+import 'package:ec_senior/main.dart';
+import 'package:ec_senior/pages/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
