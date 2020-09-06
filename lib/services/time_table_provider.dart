@@ -47,12 +47,15 @@ class TimeTableProvider extends ChangeNotifier{
         await createTodaysTimetable();
       }
     }
-    else {
-      DocumentSnapshot ttDoc = await _firestore.collection('timetable').document('example').collection('timetable').document('${_dateTime.weekday}').get();
-      DateTime ttLastUpdate = DateFormat('kk:mm, dd-MM-yyyy').parse(ttDoc.data['timestamp']);
-      if( lastUpdate.isBefore(ttLastUpdate) )
-        await updateTodaysTimetable();
-    }
+//    else {
+//      DocumentSnapshot ttDoc = await _firestore.collection('timetable').document('example').collection('timetable').document('${_dateTime.weekday}').get();
+//      if( ttDoc.exists) {
+//        DateTime ttLastUpdate = DateFormat('kk:mm, dd-MM-yyyy').parse(
+//            ttDoc.data['timestamp']);
+//        if (lastUpdate.isBefore(ttLastUpdate))
+//          await updateTodaysTimetable();
+//      }
+//    }
     QuerySnapshot newTimetable = await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').getDocuments();
 //    print(newTimetable.documents.length == currTtDocs.documents.length);
     _timetableList = [];
@@ -86,10 +89,7 @@ class TimeTableProvider extends ChangeNotifier{
   }
 
   Future<void> updateTodaysTimetable() async {
-    //TODO: Read new timetable
-    //TODO: Check if already in current timetable
-    //TODO: Add if not
-    await _firestore.collection('seniors').document(userInfo.uid).updateData({'timetableLastUpdatedAt': DateFormat('kk:mm, dd-MM-yyyy').format(DateTime.now())});
+    //TODO: Do in Junior app itself, too inefficient to do in the Senior app
   }
 
   Future<void> makeReport() async {
