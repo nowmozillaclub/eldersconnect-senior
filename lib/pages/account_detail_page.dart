@@ -287,6 +287,7 @@ class ProfileDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => 70.0;
 }
 
+//TODO: Smoll bug fix later
 
 //AlertDialog(
 //content: Column(

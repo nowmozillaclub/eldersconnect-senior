@@ -39,6 +39,16 @@ class Questionnaire extends ChangeNotifier{
 
       await addToReports(asked[i], answers[i]);
     }
+    int count = answers.length;
+    DocumentSnapshot countDoc = await _firestore.collection('seniors').document(user.uid).collection('reports').document('dailyCounts').get();
+    if(countDoc.exists && countDoc.data['counts'] != null) {
+      Map<String, int> counts = Map<String, int>.from(countDoc.data['counts']);
+      int currCount =counts['${DateTime.now().day.toString() + '-' + DateTime.now().month.toString() + '-' + DateTime.now().year.toString()}'] ?? 0;
+      counts['${'7'+ '-' + DateTime.now().month.toString() + '-' + DateTime.now().year.toString()}'] = currCount + count;
+      await _firestore.collection('seniors').document(user.uid).collection('reports').document('dailyCounts').setData({'counts': counts});
+    }
+    else
+      await _firestore.collection('seniors').document(user.uid).collection('reports').document('dailyCounts').setData({'counts': {'${DateTime.now().day.toString() + '-' + DateTime.now().month.toString() + '-' + DateTime.now().year.toString()}': count}});
   }
 
   // Create a fresh copy of questions in the seniors doc
@@ -57,7 +67,7 @@ class Questionnaire extends ChangeNotifier{
 
     if(queDoc.exists) {
       List<dynamic> currAnswers = queDoc.data['answers'] ?? [];
-      currAnswers.add({'${DateTime.now().day.toString() + '-' + DateTime.now().month.toString()}': answer});
+      currAnswers.add({'date': '${DateTime.now().day.toString() + '-' + DateTime.now().month.toString() + '-' + DateTime.now().year.toString()}', 'answer': answer});
       await _firestore.collection('seniors').document(user.uid).collection('reports')
           .document(question).updateData({'answers': currAnswers});
     }

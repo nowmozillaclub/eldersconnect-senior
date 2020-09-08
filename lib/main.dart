@@ -1,3 +1,4 @@
+import 'package:ec_senior/services/questionnaire_reports.dart';
 import 'package:ec_senior/pages/alarm_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/services/questionnaire_provider.dart';
@@ -26,6 +27,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<AuthService, Questionnaire>(
           create: (context) => Questionnaire(null),
           update: (context, value, prev) => Questionnaire(value.user),
+        ),
+        ChangeNotifierProxyProvider<AuthService, QuestionnaireReports>(
+          create: (context) => QuestionnaireReports(null),
+          update: (context, value, prev) => QuestionnaireReports(value.user),
         ),
       ],
       child: MaterialApp(
