@@ -1,3 +1,5 @@
+import 'package:ec_senior/commons/bottom_nav_bar.dart';
+import 'package:ec_senior/pages/individual_q_report.dart';
 import 'package:ec_senior/services/questionnaire_reports.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
@@ -26,28 +28,38 @@ class _ReportsPageState extends State<ReportsPage> {
             return CircularProgressIndicator();
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  height: 200,
-                  child: charts.TimeSeriesChart(
-                    _rep.getCountSeries(),
-                    animate: true,
-                    domainAxis: charts.DateTimeAxisSpec(
-                      tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
-                        day: charts.TimeFormatterSpec(
-                          format: 'dd', transitionFormat: 'dd-MM'
-                        ),
-                        hour: charts.TimeFormatterSpec(format: 'j', transitionFormat: 'dd-MM'),
-                        month: charts.TimeFormatterSpec(format: 'MM', transitionFormat: 'dd-MM'),
-                        year: charts.TimeFormatterSpec(format: 'yy', transitionFormat: 'MM-yy')
-                      )
+              Container(
+                color: MyColors.primary.withOpacity(0.2),
+                height: 200,
+                child: charts.TimeSeriesChart(
+                  _rep.getCountSeries(),
+                  animate: true,
+                  dateTimeFactory: charts.LocalDateTimeFactory(),
+                  domainAxis: charts.DateTimeAxisSpec(
+                    tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
+                      day: charts.TimeFormatterSpec(
+                        format: 'dd', transitionFormat: 'dd-MM'
+                      ),
+                      hour: charts.TimeFormatterSpec(format: 'j', transitionFormat: 'dd-MM'),
+                      month: charts.TimeFormatterSpec(format: 'MM', transitionFormat: 'dd-MM'),
+                      year: charts.TimeFormatterSpec(format: 'yy', transitionFormat: 'MM-yy')
                     )
-                  )
-                ),
+                  ),
+                )
               ),
               Container(
-                child: Text('Number of Questions Answered Daily', style: MyTextStyles().variationOfExisting(existing: MyTextStyles.title, newColor: MyColors.primary), textAlign: TextAlign.center,),
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: MyColors.accent)),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [MyColors.primary.withOpacity(0.2), MyColors.primary.withOpacity(0.4)],
+                  )
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 3.0),
+                  child: Text('Number of Questions Answered Daily', style: MyTextStyles().variationOfExisting(existing: MyTextStyles.title, newColor: MyColors.accent), textAlign: TextAlign.center,),
+                ),
               ),
               Expanded(
                 child: ListView.builder(
@@ -62,7 +74,7 @@ class _ReportsPageState extends State<ReportsPage> {
                           )
                       ),
                       onTap: () {
-
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => IndividualRep(user: _rep.user.uid,title: _rep.queList[index].question, options: _rep.queList[index].options,)));
                       },
                     );
                   },
@@ -71,7 +83,8 @@ class _ReportsPageState extends State<ReportsPage> {
             ],
           );
         },
-      )
+      ),
+      bottomNavigationBar: BottomNavBar(currentSelected: currentSelectedNavBar,),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ec_senior/models/question.dart';
 import 'package:ec_senior/models/user.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 class Questionnaire extends ChangeNotifier{
   final Firestore _firestore = Firestore.instance;
@@ -43,12 +44,12 @@ class Questionnaire extends ChangeNotifier{
     DocumentSnapshot countDoc = await _firestore.collection('seniors').document(user.uid).collection('reports').document('dailyCounts').get();
     if(countDoc.exists && countDoc.data['counts'] != null) {
       Map<String, int> counts = Map<String, int>.from(countDoc.data['counts']);
-      int currCount =counts['${DateTime.now().day.toString() + '-' + DateTime.now().month.toString() + '-' + DateTime.now().year.toString()}'] ?? 0;
-      counts['${'7'+ '-' + DateTime.now().month.toString() + '-' + DateTime.now().year.toString()}'] = currCount + count;
+      int currCount =counts['${DateFormat('dd-MM-yyyy').format(DateTime.now())}'] ?? 0;
+      counts['${DateFormat('dd-MM-yyyy').format(DateTime.now())}'] = currCount + count;
       await _firestore.collection('seniors').document(user.uid).collection('reports').document('dailyCounts').setData({'counts': counts});
     }
     else
-      await _firestore.collection('seniors').document(user.uid).collection('reports').document('dailyCounts').setData({'counts': {'${DateTime.now().day.toString() + '-' + DateTime.now().month.toString() + '-' + DateTime.now().year.toString()}': count}});
+      await _firestore.collection('seniors').document(user.uid).collection('reports').document('dailyCounts').setData({'counts': {'${DateFormat('dd-MM-yyyy').format(DateTime.now())}': count}});
   }
 
   // Create a fresh copy of questions in the seniors doc
@@ -67,13 +68,13 @@ class Questionnaire extends ChangeNotifier{
 
     if(queDoc.exists) {
       List<dynamic> currAnswers = queDoc.data['answers'] ?? [];
-      currAnswers.add({'date': '${DateTime.now().day.toString() + '-' + DateTime.now().month.toString() + '-' + DateTime.now().year.toString()}', 'answer': answer});
+      currAnswers.add({'date': '${DateFormat('dd-MM-yyyy').format(DateTime.now())}', 'answer': answer});
       await _firestore.collection('seniors').document(user.uid).collection('reports')
           .document(question).updateData({'answers': currAnswers});
     }
     else {
       List<dynamic> currAnswers = [];
-      currAnswers.add({'${DateTime.now().day.toString() + '-' + DateTime.now().month.toString() + '-' + DateTime.now().year.toString()}': answer});
+      currAnswers.add({'${DateFormat('dd-MM-yyyy').format(DateTime.now())}': answer});
       await _firestore.collection('seniors').document(user.uid).collection('reports')
           .document(question).setData({'answers': currAnswers});
     }
