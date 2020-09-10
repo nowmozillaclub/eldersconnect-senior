@@ -3,6 +3,7 @@ import 'package:ec_senior/pages/alarm_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/services/questionnaire_provider.dart';
 import 'package:ec_senior/services/time_table_provider.dart';
+import 'package:ec_senior/services/timetable_report.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/first_page.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<AuthService, QuestionnaireReports>(
           create: (context) => QuestionnaireReports(null),
           update: (context, value, prev) => QuestionnaireReports(value.user),
+        ),
+        ChangeNotifierProxyProvider<AuthService, TimetableReports>(
+          create: (context) => TimetableReports(null),
+          update: (context, value, prev) => TimetableReports(value.user),
         ),
       ],
       child: MaterialApp(

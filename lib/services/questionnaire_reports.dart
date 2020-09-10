@@ -86,15 +86,18 @@ class QuestionnaireReports extends ChangeNotifier{
       });
       DateTime minDate = counts[0].date;
       DateTime maxDate = counts[counts.length - 1].date;
-      counts = [];
-      while(!minDate.isAtSameMomentAs(maxDate)) {
-        if(countList.containsKey(DateFormat('dd-MM-yyyy').format(minDate))) {
-          counts.add(Count(date: minDate, count: countList[DateFormat('dd-MM-yyyy').format(minDate)]));
+      if(!minDate.isAtSameMomentAs(maxDate)) {
+        counts = [];
+        while (!minDate.isAtSameMomentAs(maxDate.add(Duration(days: 1)))) {
+          if (countList.containsKey(DateFormat('dd-MM-yyyy').format(minDate))) {
+            counts.add(Count(date: minDate,
+                count: countList[DateFormat('dd-MM-yyyy').format(minDate)]));
+          }
+          else {
+            counts.add(Count(date: minDate, count: 0));
+          }
+          minDate = minDate.add(Duration(days: 1));
         }
-        else {
-          counts.add(Count(date: minDate, count: 0));
-        }
-        minDate = minDate.add(Duration(days: 1));
       }
     }
   }

@@ -4,8 +4,10 @@ import 'package:ec_senior/commons/display_picture.dart';
 import 'package:ec_senior/commons/custom_tile.dart';
 import 'package:ec_senior/commons/pop_up_questions.dart';
 import 'package:ec_senior/pages/account_detail_page.dart';
+import 'package:ec_senior/pages/timetable_reports_page.dart';
 import 'package:ec_senior/services/auth_service.dart';
 import 'package:ec_senior/services/questionnaire_provider.dart';
+import 'package:ec_senior/services/timetable_report.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,7 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   CustomTile(
                     imgPath: 'assets/graphics/man.png',
-                    onTap: () => print('Card tapped'),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => TimetableReportsPage()));
+                    },
                   ),
                 ],
               ),

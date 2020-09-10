@@ -124,11 +124,12 @@ class TimeTableProvider extends ChangeNotifier{
     if(countDoc.exists && countDoc.data['counts'] != null) {
       Map<String, int> counts = Map<String, int>.from(countDoc.data['counts']);
       int currCount =counts['${DateFormat('dd-MM-yyyy').format(date)}'] ?? 0;
-      counts['${DateFormat('dd-MM-yyyy').format(DateTime.now())}'] = currCount + count;
+      counts['${DateFormat('dd-MM-yyyy').format(date)}'] = currCount + count;
       await _firestore.collection('seniors').document(user.uid).collection('timetableReports').document('dailyCounts').setData({'counts': counts});
     }
     else
       await _firestore.collection('seniors').document(user.uid).collection('timetableReports').document('dailyCounts').setData({'counts': {'${DateFormat('dd-MM-yyyy').format(date)}': count}});
+    print(date);
   }
 
   Future<void> clearTimetable() async {

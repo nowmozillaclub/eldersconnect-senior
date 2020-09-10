@@ -38,16 +38,17 @@ class _ReportsPageState extends State<ReportsPage> {
                   domainAxis: charts.DateTimeAxisSpec(
                     tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
                       day: charts.TimeFormatterSpec(
-                        format: 'dd', transitionFormat: 'dd-MM'
+                        format: 'dd-MM', transitionFormat: 'dd-MM'
                       ),
                       hour: charts.TimeFormatterSpec(format: 'j', transitionFormat: 'dd-MM'),
-                      month: charts.TimeFormatterSpec(format: 'MM', transitionFormat: 'dd-MM'),
-                      year: charts.TimeFormatterSpec(format: 'yy', transitionFormat: 'MM-yy')
+                      month: charts.TimeFormatterSpec(format: 'dd-MM', transitionFormat: 'dd-MM'),
+                      year: charts.TimeFormatterSpec(format: 'MM-yy', transitionFormat: 'MM-yy')
                     )
                   ),
                 )
               ),
               Container(
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   border: Border(bottom: BorderSide(color: MyColors.accent)),
                   gradient: LinearGradient(
