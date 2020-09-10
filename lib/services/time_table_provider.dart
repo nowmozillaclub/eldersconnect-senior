@@ -36,15 +36,22 @@ class TimeTableProvider extends ChangeNotifier{
     }
     DocumentSnapshot doc = await _firestore.collection('seniors').document(userInfo.uid).get();
     _lodaing = true;
-    DateTime lastUpdate = DateFormat('kk:mm, dd-MM-yyyy').parse(doc.data['timetableLastUpdatedAt']);
-    QuerySnapshot currTtDocs = await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').getDocuments();
-    if( _dateTime.day != lastUpdate.day ) {
-      if( currTtDocs.documents.length == 0 )
-        await createTodaysTimetable();
-      else {
-        await makeReport();
-        await clearTimetable();
-        await createTodaysTimetable();
+    if(doc.data['timetableLastUpdatedAt'] == null)
+      await createTodaysTimetable();
+    else {
+      DateTime lastUpdate = DateFormat('kk:mm, dd-MM-yyyy').parse(
+          doc.data['timetableLastUpdatedAt']);
+      QuerySnapshot currTtDocs = await _firestore.collection('seniors')
+          .document(userInfo.uid).collection('todaysTimetable')
+          .getDocuments();
+      if (_dateTime.day != lastUpdate.day) {
+        if (currTtDocs.documents.length == 0)
+          await createTodaysTimetable();
+        else {
+          await makeReport(lastUpdate);
+          await clearTimetable();
+          await createTodaysTimetable();
+        }
       }
     }
 //    else {
@@ -92,20 +99,36 @@ class TimeTableProvider extends ChangeNotifier{
     //TODO: Do in Junior app itself, too inefficient to do in the Senior app
   }
 
-  Future<void> makeReport() async {
-    List<dynamic> records = [];
-    QuerySnapshot tasks = await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').getDocuments();
-    tasks.documents.forEach((element) {
-      records.add({
-        'title': element.documentID,
-        'time': element.data['time'],
-        'completed': element.data['completed'],
-      });
+  Future<void> makeReport(DateTime date) async {
+    QuerySnapshot itemDocs = await _firestore.collection('seniors').document(userInfo.uid).collection('todaysTimetable').getDocuments();
+    int count = 0;
+    Future.forEach(itemDocs.documents, (element) async {
+      DocumentSnapshot itemDoc = await _firestore.collection('seniors').document(user.uid).collection('timetableReports').document(element.documentID).get();
+      if(element.data['completed'])
+        count++;
+      if(itemDoc.exists) {
+        List<dynamic> currRecords = itemDoc.data['records'] ?? [];
+        currRecords.add({'date': '${DateFormat('dd-MM-yyyy').format(DateTime.now().subtract(Duration(days: 1)))}', 'status': element.data['completed']});
+        await _firestore.collection('seniors').document(user.uid).collection('timetableReports')
+            .document(element.documentID).updateData({'records': currRecords});
+      }
+
+      else {
+        List<dynamic> currRecords = [];
+        currRecords.add({'date': '${DateFormat('dd-MM-yyyy').format(DateTime.now().subtract(Duration(days: 1)))}', 'status': element.data['completed']});
+        await _firestore.collection('seniors').document(user.uid).collection('timetableReports')
+            .document(element.documentID).setData({'records': currRecords});
+      }
     });
-    await _firestore.collection('seniors').document(userInfo.uid).collection('timetableReports')
-        .document('${DateFormat('dd-MM-yyyy').format(DateTime.now().subtract(Duration(days: 1)))}').setData({
-      'records': records,
-    });
+    DocumentSnapshot countDoc = await _firestore.collection('seniors').document(user.uid).collection('timetableReports').document('dailyCounts').get();
+    if(countDoc.exists && countDoc.data['counts'] != null) {
+      Map<String, int> counts = Map<String, int>.from(countDoc.data['counts']);
+      int currCount =counts['${DateFormat('dd-MM-yyyy').format(date)}'] ?? 0;
+      counts['${DateFormat('dd-MM-yyyy').format(DateTime.now())}'] = currCount + count;
+      await _firestore.collection('seniors').document(user.uid).collection('timetableReports').document('dailyCounts').setData({'counts': counts});
+    }
+    else
+      await _firestore.collection('seniors').document(user.uid).collection('timetableReports').document('dailyCounts').setData({'counts': {'${DateFormat('dd-MM-yyyy').format(date)}': count}});
   }
 
   Future<void> clearTimetable() async {

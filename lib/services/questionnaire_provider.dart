@@ -74,7 +74,7 @@ class Questionnaire extends ChangeNotifier{
     }
     else {
       List<dynamic> currAnswers = [];
-      currAnswers.add({'${DateFormat('dd-MM-yyyy').format(DateTime.now())}': answer});
+      currAnswers.add({'date': '${DateFormat('dd-MM-yyyy').format(DateTime.now())}', 'answer': answer});
       await _firestore.collection('seniors').document(user.uid).collection('reports')
           .document(question).setData({'answers': currAnswers});
     }
