@@ -35,6 +35,7 @@ class _IndividualRepState extends State<IndividualRep> {
       body: FutureBuilder(
         future: getAnswers(),
         builder: (context, answers) {
+          print(MediaQuery.of(context).size.height);
           if(answers.connectionState == ConnectionState.waiting)
             return Container();
           else

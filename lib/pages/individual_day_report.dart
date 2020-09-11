@@ -27,6 +27,8 @@ class _IndividualDayRepState extends State<IndividualDayRep> {
         builder: (context, tasks) {
           if(tasks.connectionState == ConnectionState.waiting)
             return Container();
+          else if(tasks.data.length == 0)
+            return Center(child: Text('No Tasks on ${widget.title}'),);
           else
             return Column(
               children: [
@@ -40,11 +42,11 @@ class _IndividualDayRepState extends State<IndividualDayRep> {
                       domainAxis: charts.DateTimeAxisSpec(
                           tickFormatterSpec: charts.AutoDateTimeTickFormatterSpec(
                               day: charts.TimeFormatterSpec(
-                                  format: 'dd', transitionFormat: 'dd-MM'
+                                  format: 'dd-MM', transitionFormat: 'dd-MM'
                               ),
-                              hour: charts.TimeFormatterSpec(format: 'j', transitionFormat: 'dd-MM'),
-                              month: charts.TimeFormatterSpec(format: 'MM', transitionFormat: 'dd-MM'),
-                              year: charts.TimeFormatterSpec(format: 'yy', transitionFormat: 'MM-yy')
+                              hour: charts.TimeFormatterSpec(format: 'j-dd', transitionFormat: 'dd-MM'),
+                              month: charts.TimeFormatterSpec(format: 'dd-MM', transitionFormat: 'dd-MM'),
+                              year: charts.TimeFormatterSpec(format: 'MM-yy', transitionFormat: 'MM-yy')
                           )
                       ),
                     )
@@ -54,6 +56,7 @@ class _IndividualDayRepState extends State<IndividualDayRep> {
                       itemCount: tasks.data.length,
                       itemBuilder: (context, index) {
                         return Container(
+                          width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height/3,
                           child: Card(
                             child: Padding(
@@ -78,16 +81,16 @@ class _IndividualDayRepState extends State<IndividualDayRep> {
                                           charts.PieChart(
                                             [charts.Series(
                                               id: '${tasks.data[index].task.documentID}',
-                                              data: [{'domain': tasks.data[index].task.documentID, 'measure': tasks.data[index].count}, {'domain': 'other', 'measure': tasks.data[index].totalCount - tasks.data[index].count}],
+                                              data: [{'domain': tasks.data[index].task.documentID, 'measure': tasks.data[index].count}, {'domain': 'not completed', 'measure': tasks.data[index].totalCount - tasks.data[index].count}],
                                               domainFn: (d, _) => d['domain'],
                                               measureFn: (d, _) => d['measure'],
-                                              labelAccessorFn: (d, _) => d['domain'] == 'other' ? 'other': null,
-                                              colorFn: (d, _) => d['domain'] == 'other' ? charts.ColorUtil.fromDartColor(MyColors.accent.withOpacity(0.5)): charts.ColorUtil.fromDartColor(MyColors.accent),
+                                              labelAccessorFn: (d, _) => null,
+                                              colorFn: (d, _) => d['domain'] == 'not completed' ? charts.ColorUtil.fromDartColor(MyColors.accent.withOpacity(0.5)): charts.ColorUtil.fromDartColor(MyColors.accent),
                                             )],
                                             animate: true,
                                             defaultRenderer: charts.ArcRendererConfig(arcWidth: 50, arcRendererDecorators: [charts.ArcLabelDecorator()]),
                                           ),
-                                          Center(child: Text('${((tasks.data[index].count/tasks.data[index].totalCount)*100.0).toStringAsFixed(2)}%'),)
+                                          Center(child: Text('${(tasks.data[index].count)}/${tasks.data[index].totalCount} times'),)
                                         ],
                                       )
                                   )
@@ -108,16 +111,19 @@ class _IndividualDayRepState extends State<IndividualDayRep> {
 
   Future<List<Task>>getTasks() async {
     DocumentSnapshot doc = await Firestore.instance.collection('timetable').document('example').collection('timetable').document('${widget.index}').get();
-    if((!doc.exists) || doc.data['tasks'] == null)
+    if((!doc.exists) || doc.data['tasks'] == null) {
+      print('in if');
       return [];
+    }
     List<dynamic> tasks = doc.data['tasks'];
+    print(tasks.length);
     List<Task> statuses = [];
-    Future.forEach(tasks, (element) async {
+    List<Task> data = await Future.forEach(tasks, (element) async {
       DocumentSnapshot taskDoc = await Firestore.instance.collection('seniors').document(widget.user).collection('timetableReports').document(element['title']).get();
       Task t = Task(task: taskDoc, day: widget.index);
       statuses.add(t);
-    });
-    print(statuses.length);
-    return statuses;
+    }).then((value) => statuses);
+    print('length: ${data.length}');
+    return data;
   }
 }

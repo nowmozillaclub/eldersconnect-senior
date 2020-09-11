@@ -7,6 +7,7 @@ import 'package:ec_senior/services/timetable_report.dart';
 import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/first_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
@@ -14,6 +15,10 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return MultiProvider(
       providers:  [
         ChangeNotifierProvider(create: (context) => AuthService()),

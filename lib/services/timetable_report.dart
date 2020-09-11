@@ -81,7 +81,6 @@ class TimetableReports extends ChangeNotifier{
       countList.forEach((key, value) {
         DateTime date = DateFormat('dd-MM-yyyy').parse(key);
         counts.add(Count(date: date, count: value));
-        print(key);
       });
       counts.sort((c1, c2) {
         var d1 = c1.date;
@@ -123,7 +122,7 @@ class TimetableReports extends ChangeNotifier{
   List<Series<Count, DateTime>> getDaySeries(int day) {
     return [
       Series<Count, DateTime>(
-          data: counts.where((element) => element.date.day == day).toList(),
+          data: counts.where((element) => element.date.weekday == day).toList(),
           domainFn: (Count _count, _) => _count.date,
           measureFn: (Count _count, _) => _count.count,
           colorFn: (Count _count, _) => ColorUtil.fromDartColor(MyColors.accent),

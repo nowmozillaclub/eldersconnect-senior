@@ -41,7 +41,7 @@ class _TimetableReportsPageState extends State<TimetableReportsPage> {
                             day: charts.TimeFormatterSpec(
                                 format: 'dd-MM', transitionFormat: 'dd-MM'
                             ),
-                            hour: charts.TimeFormatterSpec(format: 'j', transitionFormat: 'dd-MM'),
+                            hour: charts.TimeFormatterSpec(format: 'j-dd', transitionFormat: 'dd-MM'),
                             month: charts.TimeFormatterSpec(format: 'dd-MM', transitionFormat: 'dd-MM'),
                             year: charts.TimeFormatterSpec(format: 'MM-yy', transitionFormat: 'MM-yy')
                         )
