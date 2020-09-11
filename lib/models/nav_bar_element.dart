@@ -15,6 +15,6 @@ class NavBarElement {
 
 List<NavBarElement> navBarElements = [
   NavBarElement(icon: Icons.home, name: 'Home', pushToPage: MyHomePage()),
-  NavBarElement(icon: Icons.style, name: 'Second', pushToPage: ReportsPage()),
+  NavBarElement(icon: Icons.style, name: 'Reports', pushToPage: ReportsPage()),
   NavBarElement(icon: Icons.table_chart, name: 'TimeTable', pushToPage: TimeTablePage())
 ];

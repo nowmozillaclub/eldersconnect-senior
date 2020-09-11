@@ -1,10 +1,13 @@
+import 'package:ec_senior/utils/colors.dart';
+import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class CustomTile extends StatefulWidget {
+  final String title;
   final String imgPath;
   final VoidCallback onTap;
 
-  CustomTile({this.onTap, this.imgPath});
+  CustomTile({this.onTap, this.imgPath, this.title});
 
   @override
   _CustomTileState createState() => _CustomTileState();
@@ -21,14 +24,33 @@ class _CustomTileState extends State<CustomTile> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         elevation: 5.0,
-        child: Container(
-          height: 150.0,
-          width: 150.0,
-          child: Image.asset(
-            '${widget.imgPath}',
-            fit: BoxFit.fill,
-          ),
-        ),
+        child: Stack(
+          children: [
+            Container(
+              height: 150.0,
+              width: 150.0,
+              child: Image.asset(
+                '${widget.imgPath}',
+                fit: BoxFit.fill,
+              ),
+            ),
+            Container(
+              width: 150.0,
+              height: 150.0,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [MyColors.black.withOpacity(0.0), MyColors.black.withOpacity(0.7)],
+                  end: Alignment.bottomCenter,
+                  begin: Alignment.topCenter,
+                  stops: [1.0, 0.2]
+                )
+              ),
+            ),
+            Text(widget.title == null ? '${widget.title}': '',
+              style: MyTextStyles().variationOfExisting(existing: MyTextStyles.subtitle, newColor: MyColors.white),
+            ),
+          ],
+        )
       ),
       onTap: widget.onTap,
     );
