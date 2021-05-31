@@ -32,6 +32,7 @@ class CircleProgressBar extends CustomPainter {
     backgroundPaint.style = PaintingStyle.stroke;
     backgroundPaint.strokeWidth = strokeWidth;
     backgroundPaint.color = backgroundColor.withOpacity(0.25);
+    backgroundPaint.strokeCap = StrokeCap.round;
 
 //    canvas.drawCircle(center, radius, backgroundPaint);
     canvas.drawArc(Rect.fromCircle(center: center, radius: radius), -(pi), (pi), false, backgroundPaint);

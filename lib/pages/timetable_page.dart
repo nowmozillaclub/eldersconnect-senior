@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ec_senior/commons/bottom_nav_bar.dart';
 import 'package:ec_senior/commons/circle_progress_bar.dart';
 import 'package:ec_senior/services/time_table_provider.dart';
@@ -5,7 +7,11 @@ import 'package:ec_senior/utils/colors.dart';
 import 'package:ec_senior/utils/text_styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+
+import '../main.dart';
 
 class TimeTablePage extends StatefulWidget {
   @override
@@ -13,6 +19,7 @@ class TimeTablePage extends StatefulWidget {
 }
 
 class _TimeTablePageState extends State<TimeTablePage> {
+  static final channel = MethodChannel("ec_senior/alarm_service");
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +31,9 @@ class _TimeTablePageState extends State<TimeTablePage> {
         setState(() {
           currentSelectedNavBar = 0;
         });
+        print(Navigator.canPop(context));
+        if(!Navigator.canPop(context))
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MyApp()), (route) => false);
         return true;
       },
       child: Scaffold(
@@ -70,11 +80,10 @@ class _TimeTablePageState extends State<TimeTablePage> {
                           child: Stack(
                             children: <Widget>[
                               Positioned(
-                                left: 30.0,
+                                left: 25.0,
                                 bottom: 0.0,
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.black),
                                   ),
                                   width: MediaQuery.of(context).size.width/2,
                                   height: MediaQuery.of(context).size.height/8,
@@ -99,9 +108,9 @@ class _TimeTablePageState extends State<TimeTablePage> {
                                 child: Container(
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: <Widget>[
-                                        Text('${DateTime.now().day}', style: TextStyle(fontSize: 70.0, fontWeight: FontWeight.w600),),
+                                        Text('${DateFormat('dd').format(DateTime.now())}', style: TextStyle(fontSize: 70.0, fontWeight: FontWeight.w600),),
                                         Text('${days[DateTime.now().weekday - 1]}', style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w400),),
                                       ],
                                     )),
@@ -115,28 +124,31 @@ class _TimeTablePageState extends State<TimeTablePage> {
                   Expanded(
                     child: ListView.builder(
                         itemBuilder: (context, index) {
+                          DateTime time = DateFormat('kk:mm').parse(_currTimetable[index].time);
                           return Card(
                             elevation: 3.0,
                             child: ListTile(
                               title: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
                                   Text('${_currTimetable[index].title}', style: MyTextStyles().variationOfExisting(existing: MyTextStyles.heading, newColor: _currTimetable[index].completed ? MyColors.primary : MyColors.shadow),),
-                                  Text('Time: ${_currTimetable[index].time}', style: MyTextStyles.subtext,),
+                                  reminderButton(time.hour, time.minute, _currTimetable[index].title, !_currTimetable[index].completed, Scaffold.of(context)),
                                 ],
                               ),
-                              subtitle: _currTimetable[index].otherDays.length == 0 ? null :
-                                Builder(
-                                      builder: (context) {
-                                        String otherDays = '';
-                                        for(int i=0; i < _currTimetable[index].otherDays.length - 1; i++) {
-                                          var val = _currTimetable[index].otherDays[i] - 1;
-                                          otherDays += days[val]+', ';
-                                        }
-                                        otherDays += days[(_currTimetable[index].otherDays[_currTimetable[index].otherDays.length - 1]) - 1];
-                                        return Text('$otherDays', maxLines: 1, overflow: TextOverflow.ellipsis,);
-                                      },
-                                    ),
+                              subtitle: Text('Time: ${_currTimetable[index].time}', style: MyTextStyles.subtext,),
+//                              _currTimetable[index].otherDays.length == 0 ? null :
+//                                Builder(
+//                                      builder: (context) {
+//                                        String otherDays = '';
+//                                        for(int i=0; i < _currTimetable[index].otherDays.length - 1; i++) {
+//                                          var val = _currTimetable[index].otherDays[i] - 1;
+//                                          otherDays += days[val]+', ';
+//                                        }
+//                                        otherDays += days[(_currTimetable[index].otherDays[_currTimetable[index].otherDays.length - 1]) - 1];
+//                                        return Text('$otherDays', maxLines: 1, overflow: TextOverflow.ellipsis,);
+//                                      },
+//                                    ),
                               trailing: Material(
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20.0))),
@@ -166,6 +178,44 @@ class _TimeTablePageState extends State<TimeTablePage> {
       ),
     );
   }
-}
 
-//TODO: All days except today in the days displayed below each task
+  Widget reminderButton(int hour, int minute, String title, bool active, ScaffoldState state) {
+    return InkWell(
+      child: Container(child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Text("Set Reminder", style: active? MyTextStyles().variationOfExisting(existing: MyTextStyles.subtext, newColor: MyColors.primary): MyTextStyles.subtext,),
+      )),
+      onTap: () {
+        //TODO: Add recurring alarms for recurring tasks
+        if(active) {
+          if (DateTime.now().isBefore(DateTime(
+              DateTime.now().year, DateTime.now().month, DateTime.now().day, hour, minute, DateTime.now().second, DateTime.now().microsecond, DateTime.now().millisecond)))
+            channel.invokeMethod('schedule_alarm', {
+              "alarmId": Random().nextInt(1000),
+              "hour": hour,
+              "minute": minute,
+              "title": title,
+              "created": Random().nextInt(100),
+              "started": false,
+              "recurring": false,
+              "monday": true,
+              "tuesday": false,
+              "wednesday": false,
+              "thursday": false,
+              "friday": false,
+              "saturday": false,
+              "sunday": false
+            });
+          else
+            state.showSnackBar(SnackBar(
+              content: Text("Time Already Passed"),
+            ));
+        }
+        else
+          state.showSnackBar(SnackBar(
+            content: Text("Task Already Completed"),
+          ));
+      },
+    );
+  }
+}

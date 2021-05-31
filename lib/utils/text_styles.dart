@@ -31,11 +31,12 @@ class MyTextStyles {
     color: MyColors.shadow,
   );
 
-  TextStyle variationOfExisting({TextStyle existing, Color newColor, FontWeight newFontWeight, double newFontSize}) {
+  TextStyle variationOfExisting({TextStyle existing, Color newColor, FontWeight newFontWeight, double newFontSize, FontStyle newFontStyle}) {
     return TextStyle(
       color: newColor ?? existing.color,
       fontWeight: newFontWeight ?? existing.fontWeight,
       fontSize: newFontSize ?? existing.fontSize,
+      fontStyle: newFontStyle ?? existing.fontStyle,
     );
   }
 
